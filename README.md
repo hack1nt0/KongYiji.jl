@@ -1,5 +1,5 @@
 # KongYiji.jl
-断文识字的‘’孔乙己‘’ -- 一个简单的中文分词工具
+断文识字的“孔乙己” -- 一个简单的中文分词工具
 Kong Yiji, a simple fine tuned Chinese tokenizer
 
 ## Features
@@ -33,8 +33,11 @@ input = "一个脱离了低级趣味的人"
 output = tk(input)
 @show output
 
+# debug output
 input = "一/个/脱离/了/低级/趣味/的/人"
 tk(input, "/")
+
+# 
 inputs = [
         "他/说/的/确实/在理",
         "这/事/的确/定/不/下来",
@@ -123,5 +126,5 @@ output with user dict supplied :
 ["停电", "范围", "包括", "沙坪坝区", "的", "犀牛屙屎", "和", "犀牛屙屎抽水"]
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTA3Nzg1MTI4N119
+eyJoaXN0b3J5IjpbLTc5ODUyNjQxMF19
 -->
