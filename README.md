@@ -37,7 +37,7 @@ output = tk(input)
 input = "一/个/脱离/了/低级/趣味/的/人"
 tk(input, "/")
 
-# Test some difficulty cases, from https://www.matrix67.com/blog/archives/4212
+# Test some difficult cases, from https://www.matrix67.com/blog/archives/4212
 inputs = [
         "他/说/的/确实/在理",
         "这/事/的确/定/不/下来",
@@ -125,6 +125,9 @@ output with user dict supplied :
 ["邓颖超", "生前", "使用", "过", "的", "物品"]
 ["停电", "范围", "包括", "沙坪坝区", "的", "犀牛屙屎", "和", "犀牛屙屎抽水"]
 ```
+
+
+d
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTU4NzM5Nzk2XX0=
+eyJoaXN0b3J5IjpbLTEwMzk1MjIxMTVdfQ==
 -->
