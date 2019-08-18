@@ -28,21 +28,20 @@ kong(; user_dict_path="", user_dict_array=[], user_dict_weight=1)
 ## Usage
 
 ``` Julia
-        tk = Kong()
-        input = "一个脱离了低级趣味的人"
-        output = tk(input)
-        @show output
+tk = Kong()
+input = "一个脱离了低级趣味的人"
+output = tk(input)
+@show output
 
-        input = "一/个/脱离/了/低级/趣味/的/人"
-        tk(input, "/")
-
-        inputs = [
-                "他/说/的/确实/在理",
-                "这/事/的确/定/不/下来",
-                "费孝通/向/人大/常委会/提交/书面/报告",
-                "邓颖超/生前/使用/过/的/物品",
-                "停电/范围/包括/沙坪坝区/的/犀牛屙屎/和/犀牛屙屎抽水",
-        ]
+input = "一/个/脱离/了/低级/趣味/的/人"
+tk(input, "/")
+inputs = [
+        "他/说/的/确实/在理",
+        "这/事/的确/定/不/下来",
+        "费孝通/向/人大/常委会/提交/书面/报告",
+        "邓颖超/生前/使用/过/的/物品",
+        "停电/范围/包括/沙坪坝区/的/犀牛屙屎/和/犀牛屙屎抽水",
+]
         println("Input :")
         for input in inputs
                 println(input)
@@ -68,7 +67,7 @@ kong(; user_dict_path="", user_dict_array=[], user_dict_weight=1)
 ```
 
 ## Output
-
+```
 output = ["一", "个", "脱离", "了", "低级", "趣味", "的", "人"]
 Standard : 一  个  脱离  了  低级  趣味  的  人
 Output   : 一  个  脱离  了  低级  趣味  的  人
@@ -122,7 +121,7 @@ output with user dict supplied :
 ["费孝通", "向", "人大", "常委会", "提交", "书面", "报告"]
 ["邓颖超", "生前", "使用", "过", "的", "物品"]
 ["停电", "范围", "包括", "沙坪坝区", "的", "犀牛屙屎", "和", "犀牛屙屎抽水"]
-
+```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTE3NDg2NzI2MV19
+eyJoaXN0b3J5IjpbLTYzMjczMzAzM119
 -->
