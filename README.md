@@ -75,7 +75,10 @@ end
 
 ## Output
 ```
+Simple Usage
 output = ["一", "个", "脱离", "了", "低级", "趣味", "的", "人"]
+
+Debug Output
 Standard : 一  个  脱离  了  低级  趣味  的  人
 Output   : 一  个  脱离  了  低级  趣味  的  人
           KongYiji(1) Debug Table
@@ -110,19 +113,21 @@ Output   : 一  个  脱离  了  低级  趣味  的  人
   13     (28, 31)   的    CTB
   14     (31, 34)   人    CTB
 
+
+Test some difficult cases, from https://www.matrix67.com/blog/archives/4212
 Input :
 他/说/的/确实/在理
 这/事/的确/定/不/下来
 费孝通/向/人大/常委会/提交/书面/报告
 邓颖超/生前/使用/过/的/物品
 停电/范围/包括/沙坪坝区/的/犀牛屙屎/和/犀牛屙屎抽水
-raw output :
+Raw output :
 ["他", "说", "的", "确实", "在", "理"]
 ["这", "事", "的", "确定", "不", "下来"]
 ["费孝通", "向", "人大", "常委会", "提交", "书面", "报告"]
 ["邓", "颖", "超生", "前", "使用", "过", "的", "物品"]
 ["停电", "范围", "包括", "沙", "坪", "坝", "区", "的", "犀牛", "屙", "屎", "和", "犀牛", "屙", "屎", "抽水"]
-output with user dict supplied :
+Output with user dict supplied :
 ["他", "说", "的", "确实", "在理"]
 ["这", "事", "的确", "定", "不", "下来"]
 ["费孝通", "向", "人大", "常委会", "提交", "书面", "报告"]
@@ -135,5 +140,5 @@ output with user dict supplied :
 + Exploit summary of POS table, insert a example column, plus constract with other POS scheme(PKU etc.)
 + Explore MaxEntropy & CRF related algorithms
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTU3MTQ2MzIzM119
+eyJoaXN0b3J5IjpbLTU2NDg1MjcyOV19
 -->
