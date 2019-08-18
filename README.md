@@ -128,7 +128,8 @@ output with user dict supplied :
 
 ## Todos
 + Filter low frequency words from CTB
-+ Enhance summary of POS table, insert a 
++ Exploit summary of POS table, insert a example column, plus constract with other POS scheme(PKU etc.)
++ Explore CRF related
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE3OTcyNzMwOTldfQ==
+eyJoaXN0b3J5IjpbLTE1NzY1MDk5MTNdfQ==
 -->
