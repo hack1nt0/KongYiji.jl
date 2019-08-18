@@ -42,28 +42,28 @@ inputs = [
         "邓颖超/生前/使用/过/的/物品",
         "停电/范围/包括/沙坪坝区/的/犀牛屙屎/和/犀牛屙屎抽水",
 ]
-        println("Input :")
-        for input in inputs
-                println(input)
-        end
+println("Input :")
+for input in inputs
+        println(input)
+end
 
-        println("raw output :")
-        for input in inputs
-                println(tk(filter(c -> c != '/', input)))
-        end
-        
-        tk2 = Kong(; user_dict_array=[("VV", "定"),
-                                      ("VA", "在理"),
-                                       "邓颖超",
-                                       "沙坪坝区", 
-                                       "犀牛屙屎",
-                                       "犀牛屙屎抽水",
-                                     ]
-        )
-        println("output with user dict supplied :")
-        for input in inputs
-                println(tk2(filter(c -> c != '/', input)))
-        end
+println("raw output :")
+for input in inputs
+        println(tk(filter(c -> c != '/', input)))
+end
+
+tk2 = Kong(; user_dict_array=[("VV", "定"),
+                              ("VA", "在理"),
+                               "邓颖超",
+                               "沙坪坝区", 
+                               "犀牛屙屎",
+                               "犀牛屙屎抽水",
+                             ]
+)
+println("output with user dict supplied :")
+for input in inputs
+        println(tk2(filter(c -> c != '/', input)))
+end
 ```
 
 ## Output
@@ -123,5 +123,5 @@ output with user dict supplied :
 ["停电", "范围", "包括", "沙坪坝区", "的", "犀牛屙屎", "和", "犀牛屙屎抽水"]
 ```
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTYzMjczMzAzM119
+eyJoaXN0b3J5IjpbMTA3Nzg1MTI4N119
 -->
