@@ -1,5 +1,33 @@
 using Test, KongYiji, Pkg, JLD2, FileIO, ProgressMeter
 
+
+#=
+@testset "Generating REQUIRE file..." begin
+        println(Pkg.METADATA_compatible_uuid("KongYiji"))
+        PT = Pkg.Types
+        Pkg.activate("..")             # current directory as the project
+        ctx = PT.Context()
+        pkg = ctx.env.pkg
+        if pkg ≡ nothing
+            @error "Not in a package, I won't generate REQUIRE."
+            exit(1)
+        else
+            @info "found package" pkg = pkg
+        end
+
+        deps = PT.get_deps(ctx)
+        non_std_deps = sort(collect(setdiff(keys(deps), values(ctx.stdlibs))))
+
+        open(joinpath("..", "REQUIRE"), "w") do io
+            println(io, "julia 0.7")
+            for d in non_std_deps
+                println(io, d)
+                @info "listing $d"
+            end
+        end
+end
+=#
+
 #=
 @testset "Generating CTB data file..." begin
         home = joinpath("d:\\", "ctb8.0")
