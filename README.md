@@ -28,16 +28,19 @@ kong(; user_dict_path="", user_dict_array=[], user_dict_weight=1)
 ## Usage
 
 ``` Julia
+
+println("Simple Usage")
 tk = Kong()
 input = "一个脱离了低级趣味的人"
 output = tk(input)
 @show output
+println()
 
-println("debug output
+println("Debug Output : ")
 input = "一/个/脱离/了/低级/趣味/的/人"
 tk(input, "/")
 
-# Test some difficult cases, from https://www.matrix67.com/blog/archives/4212
+println("Test some difficult cases, from https://www.matrix67.com/blog/archives/4212")
 inputs = [
         "他/说/的/确实/在理",
         "这/事/的确/定/不/下来",
@@ -131,5 +134,5 @@ output with user dict supplied :
 + Exploit summary of POS table, insert a example column, plus constract with other POS scheme(PKU etc.)
 + Explore MaxEntropy & CRF related algorithms
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTkwNTIxMjRdfQ==
+eyJoaXN0b3J5IjpbMTUyNjQzMzczM119
 -->
