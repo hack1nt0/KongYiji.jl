@@ -3,6 +3,9 @@ uuid = "3943505e-88e3-5b18-a3d9-e2be89fdab48"
 authors = ["dy <jealousing@sjtu.edu.cn>"]
 version = "0.1.0"
 
+[compat]
+julia = ">= 0.7"
+
 [deps]
 DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
