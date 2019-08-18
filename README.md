@@ -33,7 +33,7 @@ input = "一个脱离了低级趣味的人"
 output = tk(input)
 @show output
 
-# debug output
+println("debug output
 input = "一/个/脱离/了/低级/趣味/的/人"
 tk(input, "/")
 
@@ -129,7 +129,7 @@ output with user dict supplied :
 ## Todos
 + Filter low frequency words from CTB
 + Exploit summary of POS table, insert a example column, plus constract with other POS scheme(PKU etc.)
-+ Explore CRF related
++ Explore MaxEntropy & CRF related algorithms
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE1NzY1MDk5MTNdfQ==
+eyJoaXN0b3J5IjpbMTkwNTIxMjRdfQ==
 -->
