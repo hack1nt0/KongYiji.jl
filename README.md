@@ -54,7 +54,7 @@ for input in inputs
         println(input)
 end
 
-println("raw output :")
+println("Raw output :")
 for input in inputs
         println(tk(filter(c -> c != '/', input)))
 end
@@ -67,7 +67,7 @@ tk2 = Kong(; user_dict_array=[("VV", "定"),
                                "犀牛屙屎抽水",
                              ]
 )
-println("output with user dict supplied :")
+println("Output with user dict supplied :")
 for input in inputs
         println(tk2(filter(c -> c != '/', input)))
 end
@@ -140,5 +140,5 @@ Output with user dict supplied :
 + Exploit summary of POS table, insert a example column, plus constract with other POS scheme(PKU etc.)
 + Explore MaxEntropy & CRF related algorithms
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTU2NDg1MjcyOV19
+eyJoaXN0b3J5IjpbNDU0ODgxMzUxXX0=
 -->
