@@ -13,15 +13,17 @@ Kong Yiji, a simple fine tuned Chinese tokenizer
 3. Fully exported debug info. See Usage.
 
 ## Constructor
-        kong(; user_dict_path="", user_dict_array=[], user_dict_weight=1)
+```julia
+kong(; user_dict_path="", user_dict_array=[], user_dict_weight=1)
+```
         
-        > **user_dict_path** : a file path of user dict, eachline of which begin a **word**, optionally followed by a **part-of-speech tag(postag)**;
++  **user_dict_path** : a file path of user dict, eachline of which begin a **word**, optionally followed by a **part-of-speech tag(postag)**;
                                If the postag not supplied, **NR (Proper noun, 专有名词)** is automatically inserted. 
-        > **user_dict_array** : a Vector{Tuple{String, String}} repr. [(postag, word)]
++ **user_dict_array** : a Vector{Tuple{String, String}} repr. [(postag, word)]
         
-        > **user_dict_weight** : if value is **m**, frequency of (postag, word) in user dictionary will be $ m * maximum(values(h2v[postag])) $
++ **user_dict_weight** : if value is **m**, frequency of (postag, word) in user dictionary will be $ m * maximum(values(h2v[postag])) $
 
-        ### Note all user suppiled postags MUST conform to specifications of Chinest Treebank.
+### Note all user suppiled postags MUST conform to specifications of Chinest Treebank.
 
 ## Usage
 
@@ -122,5 +124,5 @@ output with user dict supplied :
 ["停电", "范围", "包括", "沙坪坝区", "的", "犀牛屙屎", "和", "犀牛屙屎抽水"]
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyODkxOTU2MzNdfQ==
+eyJoaXN0b3J5IjpbMTE3NDg2NzI2MV19
 -->
