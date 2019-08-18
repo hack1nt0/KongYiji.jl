@@ -36,7 +36,7 @@ output = tk(input)
 @show output
 println()
 
-println("Debug Output : ")
+println("Debug Output")
 input = "一/个/脱离/了/低级/趣味/的/人"
 tk(input, "/")
 println()
@@ -135,5 +135,5 @@ output with user dict supplied :
 + Exploit summary of POS table, insert a example column, plus constract with other POS scheme(PKU etc.)
 + Explore MaxEntropy & CRF related algorithms
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjExODk2NzU5MV19
+eyJoaXN0b3J5IjpbLTU3MTQ2MzIzM119
 -->
