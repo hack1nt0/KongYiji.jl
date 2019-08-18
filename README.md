@@ -127,7 +127,8 @@ output with user dict supplied :
 ```
 
 ## Todos
-+ FIlter low frequency words from w
++ Filter low frequency words from CTB
++ Enhance summary of POS table, insert a 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0ODE0MTQ4NjFdfQ==
+eyJoaXN0b3J5IjpbLTE3OTcyNzMwOTldfQ==
 -->
