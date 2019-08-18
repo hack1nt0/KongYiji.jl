@@ -39,6 +39,7 @@ println()
 println("Debug Output : ")
 input = "一/个/脱离/了/低级/趣味/的/人"
 tk(input, "/")
+println()
 
 println("Test some difficult cases, from https://www.matrix67.com/blog/archives/4212")
 inputs = [
@@ -134,5 +135,5 @@ output with user dict supplied :
 + Exploit summary of POS table, insert a example column, plus constract with other POS scheme(PKU etc.)
 + Explore MaxEntropy & CRF related algorithms
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTUyNjQzMzczM119
+eyJoaXN0b3J5IjpbMjExODk2NzU5MV19
 -->
