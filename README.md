@@ -6,13 +6,11 @@ Kong Yiji, a simple fine tuned Chinese tokenizer
 
 ### Version 0.1.0
                 
-        > Trained on Chinese Treebank 8.0. Of version 1 now, using a extended word-level Hidden Markov Model(HMM) contrast by
-        eariler char-level HMM. 
-        
-        > Fine tuned to deal with **new words**(未登录词, 网络新词). If the algorithm cannot find them, just add them to user dict(see **Constructor**), and
-        twist **usr_dict_weight** if necessary.
+1. Trained on Chinese Treebank 8.0. Of version 1 now, using a extended word-level Hidden Markov Model(HMM) contrast by eariler char-level HMM. 
 
-        > Fully exported debug info. See Usage.
+2. Fine tuned to deal with **new words**(未登录词, 网络新词). If the algorithm cannot find them, just add them to user dict(see **Constructor**), and twist **usr_dict_weight** if necessary.
+
+3. Fully exported debug info. See Usage.
 
 ## Constructor
         kong(; user_dict_path="", user_dict_array=[], user_dict_weight=1)
@@ -124,5 +122,5 @@ output with user dict supplied :
 ["停电", "范围", "包括", "沙坪坝区", "的", "犀牛屙屎", "和", "犀牛屙屎抽水"]
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjk2MDk1NDczXX0=
+eyJoaXN0b3J5IjpbLTEyODkxOTU2MzNdfQ==
 -->
