@@ -126,8 +126,8 @@ output with user dict supplied :
 ["停电", "范围", "包括", "沙坪坝区", "的", "犀牛屙屎", "和", "犀牛屙屎抽水"]
 ```
 
-
-d
+## Todos
++ FIlter low frequency words from w
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEwMzk1MjIxMTVdfQ==
+eyJoaXN0b3J5IjpbLTE0ODE0MTQ4NjFdfQ==
 -->
