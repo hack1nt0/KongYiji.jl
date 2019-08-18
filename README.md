@@ -23,7 +23,7 @@ kong(; user_dict_path="", user_dict_array=[], user_dict_weight=1)
         
 + **user_dict_weight** : if value is **m**, frequency of (postag, word) in user dictionary will be $ m * maximum(values(h2v[postag])) $
 
-***Note all user suppiled postags MUST conform to specifications of Chinest Treebank.***
+***Note all user suppiled postags MUST conform to specifications of Chinese Treebank.***
 ```
                                      CTB postable
   -------------------------------------------------------------------------------------
@@ -178,5 +178,6 @@ Output with user dict supplied :
 + Exploit summary of POS table, insert a example column, plus constract with other POS scheme(PKU etc.)
 + Explore MaxEntropy & CRF related algorithms
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyNDI5Nzk3MTUsLTIwMDY4ODQ4NF19
+eyJoaXN0b3J5IjpbMTQyMjcwNDY4NiwtMTI0Mjk3OTcxNSwtMj
+AwNjg4NDg0XX0=
 -->
