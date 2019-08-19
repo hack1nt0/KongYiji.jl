@@ -24,16 +24,15 @@ kong(; user_dict_path="", user_dict_array=[], user_dict_weight=1)
 + **user_dict_weight** : if value is **m**, frequency of (postag, word) in user dictionary will be $ m * maximum(values(h2v[postag])) $
 
 ***Note all user suppiled postags MUST conform to specifications of Chinese Treebank.***
-```
 
 ## Usage
-
+see test/runtests.jl
 
 ## Todos
 + Filter low frequency words from CTB
 + Exploit summary of POS table, insert a example column, plus constract with other POS scheme(PKU etc.)
 + Explore MaxEntropy & CRF related algorithms
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNTAyNDQzOTMzLDE0MjI3MDQ2ODYsLTEyND
+eyJoaXN0b3J5IjpbODE5MTU3MzM5LDE0MjI3MDQ2ODYsLTEyND
 I5Nzk3MTUsLTIwMDY4ODQ4NF19
 -->
