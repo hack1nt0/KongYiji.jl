@@ -49,9 +49,9 @@ function Kong(;user_dict_path="", user_dict_array=[], user_dict_weight=1, EPS::T
         if isfile(user_dict_path)
                for line in eachline(user_dict_path)
                         cells = split(line)
-                        word, pos = "", ""
-                        if length(cells) > 0 word = cells[1] end
-                        if length(cells) > 1 pos = cells[2] end
+                        pos, word = "", ""
+                        if length(cells) > 0 pos = cells[1] end
+                        if length(cells) > 1 word = cells[2] end
                         if pos != "" && !haskey(pmp, pos) error("Postag $(pos) not defined") end
                         if word == "" continue end
                         if pos == "" pos = "NR" end  #NOTE default pos NR

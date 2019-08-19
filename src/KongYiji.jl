@@ -6,7 +6,7 @@ using Pkg
 using JLD2, FileIO
 using Random, DataStructures, ProgressMeter, DelimitedFiles
 
-export Kong, postable
+export Kong, postable, h2vtable, v2htable, h2htable, hprtable
 
 include("UselessTable.jl")
 include("zip7.jl")

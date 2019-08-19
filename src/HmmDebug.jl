@@ -6,7 +6,7 @@ function (hmm::HMM)(input::String, dlm::String)
         return hmm(x, standard)
 end
 
-function (hmm::HMM)(x::String, standard::Vector)
+function (hmm::HMM)(x::String, standard::Vector{<:AbstractString})
         chrs = codeunits(x)
         vtxs = collect(eachmatch(hmm.dict, chrs))
         sort!(vtxs)
@@ -92,4 +92,58 @@ function (hmm::HMM)(x::String, standard::Vector)
         match_mat[:,2] = [x[v] for v in vtxs]
         match_mat[:,3] = [(v.i > length(hmm.words) - hmm.user_words ? "user.dict" : "CTB") for v in vtxs]
         println(UselessTable(match_mat; cnames=["UInt8.range", "word", "source"], heads=["AhoCorasickAutomaton Matched Words"]))
+
+        println(HmmScoreTable(standard, output))
 end
+
+function h2vtable(hmm::HMM, postag::String)
+        ih = findfirst(isequal(postag), hmm.tags)
+        if isnothing(ih) error("$(postag) not found in ctb") end
+        vs = collect(hmm.h2v[ih])
+        sort!(vs; by=last, rev=true)
+        nv = length(vs)
+        mat = Matrix{Any}(undef, (nv, 3))
+        word_ids, probs = map(first, vs), exp.(map(last, vs))
+        mat[:,1] = hmm.words[word_ids]
+        mat[:,2] = map(p -> trunc(p, digits=6), probs)
+        mat[:,3] = map(i -> (i > length(hmm.words) - hmm.user_words ? "user.dict" : "CTB"), word_ids)
+        return UselessTable(mat; cnames=["word", "prob.", "source"], foots=["$(postag) has $(length(vs)) words", "Unknown words porb. = $(1. - sum(probs))"])
+end
+
+function v2htable(hmm::HMM, word::String)
+        word_id = findfirst(isequal(word), hmm.words)
+        if isnothing(word_id) error("$(word) not found in hmm") end
+        np = length(hmm.tags)
+        hs = [(hmm.tags[first(p)], haskey(last(p), word_id) ? exp(last(p)[word_id]) : 0.) for p in enumerate(hmm.h2v)]
+        sort!(hs; by=last, rev=true)
+        mat = Matrix{Any}(undef, (np, 1))
+        mat[:,1] = map(d -> trunc(d, digits=6), map(last, hs))
+        return UselessTable(mat; cnames=["Prob."], rnames=map(first, hs), topleft="From\\To")
+end
+
+function h2htable(hmm::HMM)
+        np = length(hmm.tags)
+        mat = map(d->Int(round(exp(d)*100)), hmm.h2h)
+        return UselessTable(mat; cnames=hmm.tags, rnames=hmm.tags, topleft="From\\To(%)")
+end
+
+function hprtable(hmm::HMM)
+        np = length(hmm.tags)
+        mat = Matrix{Any}(undef, (np, 1))
+        mat[:,1] = map(d->trunc(exp(d), digits=6), hmm.hpr)
+        return UselessTable(mat; cnames=["prob."], rnames=hmm.tags)
+end
+
+function postable(hmm::HMM)
+        tsv = readdlm(joinpath(pathof(KongYiji), "..", "..", "data", "postable.tsv"), '\t', String)
+        return UselessTable(tsv[2:end,:]; cnames=tsv[1,:], heads=["CTB postable"])
+end
+
+
+
+
+
+
+
+
+

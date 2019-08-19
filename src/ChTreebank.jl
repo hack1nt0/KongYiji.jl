@@ -185,10 +185,3 @@ function kfolds(docs; k::Int=10)
         end
         return r
 end
-
-
-
-function postable()
-        tsv = readdlm(joinpath(pathof(KongYiji), "..", "..", "data", "postable.tsv"), '\t', String)
-        return UselessTable(tsv[2:end,:]; cnames=tsv[1,:], heads=["CTB postable"])
-end

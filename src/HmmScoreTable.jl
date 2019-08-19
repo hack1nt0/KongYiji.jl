@@ -18,7 +18,7 @@ HmmScoreTable(xs::Vector{Vector{String}}, ys::Vector{Vector{String}}) = mapreduc
         x : Standard output
         y : KongYiji output
 """
-function HmmScoreTable(x::Vector{String}, y::Vector{String})
+function HmmScoreTable(x::Vector{<:AbstractString}, y::Vector{<:AbstractString})
         #### char level
         # confusion matrix
         c_cmat, c_f1, c_p, c_r = fill(0, (4, 4)), fill(0., 4), fill(0., 4), fill(0., 4)
