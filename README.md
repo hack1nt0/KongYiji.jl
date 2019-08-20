@@ -12,7 +12,7 @@ Kong Yiji, a simple fine tuned Chinese tokenizer
 
 3. Fully exported debug info with functions below:
 	1. **postable** : table of part-of-speech(pos) tags used in CTB
-	2. **h2vtable** : table of hidden(pos tags) to visual, i.e., table of pos tags to words, emission matrix
+	2. **h2vtable** : table of hidden (pos tag) to visual (words), i.e., emission matrix
 	3. **v2htable** : reverse of above
 	4. **h2htable** : table of hidden to hidden, i.e., transfer matrix
 	5. **hprtable** : table of prior of hidden, i.e. prior probabilistic
@@ -22,7 +22,7 @@ Kong Yiji, a simple fine tuned Chinese tokenizer
 kong(; user_dict_path="", user_dict_array=[], user_dict_weight=1)
 ```
         
-+  **user_dict_path** : a file path of user dict, eachline of which begin a **word**, optionally followed by a **part-of-speech tag(postag)**;
++  **user_dict_path** : a file path of user dict, eachline of which begin a **word**, optionally ahead by a **part-of-speech tag(postag)**;
                                If the postag not supplied, **NR (Proper noun, 专有名词)** is automatically inserted. 
 + **user_dict_array** : a Vector{Tuple{String, String}} repr. [(postag, word)]
         
@@ -38,7 +38,7 @@ see test/runtests.jl
 + Exploit summary of POS table, insert a example column, plus constract with other POS scheme(PKU etc.)
 + Explore MaxEntropy & CRF related algorithms
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTU0MDc1NjI4MSwtNDkxMTEzODI0LDk2ND
-cxOTk0OCw4MTkxNTczMzksMTQyMjcwNDY4NiwtMTI0Mjk3OTcx
-NSwtMjAwNjg4NDg0XX0=
+eyJoaXN0b3J5IjpbLTE0MjE5MzM4NTcsLTQ5MTExMzgyNCw5Nj
+Q3MTk5NDgsODE5MTU3MzM5LDE0MjI3MDQ2ODYsLTEyNDI5Nzk3
+MTUsLTIwMDY4ODQ4NF19
 -->
