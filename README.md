@@ -11,8 +11,9 @@ Kong Yiji, a simple fine tuned Chinese tokenizer
 2. Fine tuned to deal with **new words**(未登录词, 网络新词). If the algorithm cannot find them, just add them to user dict(see **Constructor**), and twist **usr_dict_weight** if necessary.
 
 3. Fully exported debug info with functions below:
-	1. **postable** : table of part-of-speech used in CTB
-	2. **h2vtable** : table of hidden to visual, 、
+	1. **postable** : table of part-of-speech(pos) tags used in CTB
+	2. **h2vtable** : table of hidden to visual, i.e., table of pos tags to words
+	3. **v2htable** : table of hidden to visual, i.e., table of pos tags to words 
 
 ## Constructor
 ```julia
@@ -35,7 +36,7 @@ see test/runtests.jl
 + Exploit summary of POS table, insert a example column, plus constract with other POS scheme(PKU etc.)
 + Explore MaxEntropy & CRF related algorithms
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTYyOTE1NTMyMyw5NjQ3MTk5NDgsODE5MT
+eyJoaXN0b3J5IjpbLTIyNjIyODk5Myw5NjQ3MTk5NDgsODE5MT
 U3MzM5LDE0MjI3MDQ2ODYsLTEyNDI5Nzk3MTUsLTIwMDY4ODQ4
 NF19
 -->
