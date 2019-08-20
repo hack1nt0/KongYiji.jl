@@ -31,14 +31,14 @@ kong(; user_dict_path="", user_dict_array=[], user_dict_weight=1)
 ***Note all user suppiled postags MUST conform to specifications of Chinese Treebank.***
 
 ## Usage
-see test/runtests.jl
+See test/runtests.jl
 
 ## Todos
 + Filter low frequency words from CTB
 + Exploit summary of POS table, insert a example column, plus constract with other POS scheme(PKU etc.)
 + Explore MaxEntropy & CRF related algorithms
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0MjE5MzM4NTcsLTQ5MTExMzgyNCw5Nj
-Q3MTk5NDgsODE5MTU3MzM5LDE0MjI3MDQ2ODYsLTEyNDI5Nzk3
-MTUsLTIwMDY4ODQ4NF19
+eyJoaXN0b3J5IjpbLTI1MDAzODUyOSwtMTQyMTkzMzg1NywtND
+kxMTEzODI0LDk2NDcxOTk0OCw4MTkxNTczMzksMTQyMjcwNDY4
+NiwtMTI0Mjk3OTcxNSwtMjAwNjg4NDg0XX0=
 -->
