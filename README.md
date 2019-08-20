@@ -10,7 +10,8 @@ Kong Yiji, a simple fine tuned Chinese tokenizer
 
 2. Fine tuned to deal with **new words**(未登录词, 网络新词). If the algorithm cannot find them, just add them to user dict(see **Constructor**), and twist **usr_dict_weight** if necessary.
 
-3. Fully exported debug info. See Usage.
+3. Fully exported debug info with debugable
+	1. postable
 
 ## Constructor
 ```julia
@@ -33,6 +34,6 @@ see test/runtests.jl
 + Exploit summary of POS table, insert a example column, plus constract with other POS scheme(PKU etc.)
 + Explore MaxEntropy & CRF related algorithms
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbODE5MTU3MzM5LDE0MjI3MDQ2ODYsLTEyND
-I5Nzk3MTUsLTIwMDY4ODQ4NF19
+eyJoaXN0b3J5IjpbLTg0ODk4NzkyMSw4MTkxNTczMzksMTQyMj
+cwNDY4NiwtMTI0Mjk3OTcxNSwtMjAwNjg4NDg0XX0=
 -->
