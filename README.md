@@ -12,7 +12,7 @@ Kong Yiji, a simple fine tuned Chinese tokenizer
 
 3. Fully exported debug info with functions below:
 	1. **postable** : table of part-of-speech used in CTB
-	2. **h2vtable** : table of hidden to visual, 
+	2. **h2vtable** : table of hidden to visual, 、
 
 ## Constructor
 ```julia
@@ -35,6 +35,7 @@ see test/runtests.jl
 + Exploit summary of POS table, insert a example column, plus constract with other POS scheme(PKU etc.)
 + Explore MaxEntropy & CRF related algorithms
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbOTY0NzE5OTQ4LDgxOTE1NzMzOSwxNDIyNz
-A0Njg2LC0xMjQyOTc5NzE1LC0yMDA2ODg0ODRdfQ==
+eyJoaXN0b3J5IjpbLTYyOTE1NTMyMyw5NjQ3MTk5NDgsODE5MT
+U3MzM5LDE0MjI3MDQ2ODYsLTEyNDI5Nzk3MTUsLTIwMDY4ODQ4
+NF19
 -->
