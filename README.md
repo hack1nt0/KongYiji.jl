@@ -8,7 +8,7 @@ Kong Yiji, a simple fine tuned Chinese tokenizer
                 
 1. Trained on Chinese Treebank 8.0. Of version 1 now, using a extended word-level Hidden Markov Model(HMM) contrast by eariler char-level HMM. 
 
-2. Fine tuned to deal with **new words**(未登录词, 网络新词). If the algorithm cannot find them, just add them to user dict(see **Constructor**), and twist **usr_dict_weight** if necessary.
+2. Fine tuned to deal with ****Out-of-vocabulary** (OOV) words**(未登录词, 网络新词). If the algorithm cannot find them, just add them to user dict(see **Constructor**), and twist **usr_dict_weight** if necessary.
 
 3. Fully exported debug info with functions below:
 	1. **postable** : table of part-of-speech(pos) tags used in CTB
@@ -38,7 +38,8 @@ See test/runtests.jl
 + Exploit summary of POS table, insert a example column, plus constract with other POS scheme(PKU etc.)
 + Explore MaxEntropy & CRF related algorithms
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTI1MDAzODUyOSwtMTQyMTkzMzg1NywtND
-kxMTEzODI0LDk2NDcxOTk0OCw4MTkxNTczMzksMTQyMjcwNDY4
-NiwtMTI0Mjk3OTcxNSwtMjAwNjg4NDg0XX0=
+eyJoaXN0b3J5IjpbLTU2MjQyODE4NSwtMjUwMDM4NTI5LC0xND
+IxOTMzODU3LC00OTExMTM4MjQsOTY0NzE5OTQ4LDgxOTE1NzMz
+OSwxNDIyNzA0Njg2LC0xMjQyOTc5NzE1LC0yMDA2ODg0ODRdfQ
+==
 -->
