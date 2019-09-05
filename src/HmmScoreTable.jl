@@ -54,10 +54,21 @@ function HmmScoreTable(x::Vector{<:AbstractString}, y::Vector{<:AbstractString})
         end
 
         ##### word level
-        ix, iy, px, py, nx, ny, r = 1, 1, 1, 1, length(x), length(y), 0.
+        r = length(eachmatch(x, y)) - 2
+        w_p = r / length(y)
+        w_r = r / length(x)
+        w_f1 = f1(w_p, w_r)
+        return HmmScoreTable(c_cmat, c_f1, c_p, c_r, w_f1, w_p, w_r, 1)
+end
+
+function eachmatch(x::Vector{<:AbstractString}, y::Vector{<:AbstractString})
+        ix, iy, px, py, nx, ny = 1, 1, 1, 1, length(x), length(y)
+        ret = Tuple{Int, Int}[]
+        push!(ret, (0,0))
+        #todo sizehint?
         while ix <= nx && iy <= ny
                 if px == py
-                        if x[ix] == y[iy] r += 1 end
+                        if x[ix] == y[iy] push!(ret, (ix,iy)) end
                         nxi, nyi = length(x[ix]), length(y[iy])
                         if nxi == nyi px += nxi; py += nyi; ix += 1; iy += 1
                         elseif nxi < nyi px += nxi; ix += 1
@@ -69,10 +80,8 @@ function HmmScoreTable(x::Vector{<:AbstractString}, y::Vector{<:AbstractString})
                         while py < px && iy <= ny py += length(y[iy]); iy += 1 end
                 end
         end
-        w_p = r / length(y)
-        w_r = r / length(x)
-        w_f1 = f1(w_p, w_r)
-        return HmmScoreTable(c_cmat, c_f1, c_p, c_r, w_f1, w_p, w_r, 1)
+        push!(ret, (nx + 1,ny + 1))
+        return ret
 end
 
 +(a::HmmScoreTable, b::HmmScoreTable) = HmmScoreTable(map(x->getfield(a, x) + getfield(b, x), fieldnames(HmmScoreTable))...)
@@ -105,6 +114,3 @@ function show(io::IO, tb::HmmScoreTable)
 end
 
 f1(x, y) = 2 / (1. / x + 1. / y)
-
-############ Interfaces to ChTreebank 
-HmmScoreTable(xs::Vector{CtbDocument}, ys::Vector{Vector{String}}) = HmmScoreTable(map(tokens, xs), ys)

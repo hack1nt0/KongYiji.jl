@@ -1,5 +1,3 @@
-const Td = Dict
-const Tf = Float64
 
 struct CykModel
     nrule::Int

@@ -1,0 +1,12 @@
+﻿
+#person (人名、名人、虚构的人名、网名?)
+
+#orgnization (bunch of person)
+
+#location (地图的某个位置、名胜古迹、虚构的地点)
+
+#time(date) duration measure(对实体的某个属性的数值型描述, 属性可能前置也有可能后置)
+
+
+#概念 (非物理实体, 各学科的知识点, URL, 电话号码, 快递单号，身份证，)
+

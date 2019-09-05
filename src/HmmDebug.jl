@@ -71,7 +71,7 @@ function (hmm::HMM)(x::String, standard::Vector{<:AbstractString})
                                 word_id = vtxs[vtx_id].i
                         end
                         if word_id == 0 source = "algorithm"
-                        else source = ifelse(word_id > length(hmm.words) - hmm.user_words, "usr.dict", "CTB")
+                        else source = ifelse(word_id > length(hmm.words) - hmm.usr_words, "usr.dict", "CTB")
                         end
                 end
                 prob_h2v = word_id == 0 ? hmm.INF[postag_id] : hmm.h2v[postag_id][word_id]
@@ -90,7 +90,7 @@ function (hmm::HMM)(x::String, standard::Vector{<:AbstractString})
         match_mat = Matrix{Any}(undef, (nv, 3))
         match_mat[:,1] = [(v.s,v.t) for v in vtxs]
         match_mat[:,2] = [x[v] for v in vtxs]
-        match_mat[:,3] = [(v.i > length(hmm.words) - hmm.user_words ? "user.dict" : "CTB") for v in vtxs]
+        match_mat[:,3] = [(v.i > length(hmm.words) - hmm.usr_words ? "user.dict" : "CTB") for v in vtxs]
         println(UselessTable(match_mat; cnames=["UInt8.range", "word", "source"], heads=["AhoCorasickAutomaton Matched Words"]))
 
         println(HmmScoreTable(standard, output))
@@ -106,7 +106,7 @@ function h2vtable(hmm::HMM, postag::String)
         word_ids, probs = map(first, vs), exp.(map(last, vs))
         mat[:,1] = hmm.words[word_ids]
         mat[:,2] = map(p -> trunc(p, digits=6), probs)
-        mat[:,3] = map(i -> (i > length(hmm.words) - hmm.user_words ? "user.dict" : "CTB"), word_ids)
+        mat[:,3] = map(i -> (i > length(hmm.words) - hmm.usr_words ? "user.dict" : "CTB"), word_ids)
         return UselessTable(mat; cnames=["word", "prob.", "source"], foots=["$(postag) has $(length(vs)) words", "Unknown words porb. = $(1. - sum(probs))"])
 end
 

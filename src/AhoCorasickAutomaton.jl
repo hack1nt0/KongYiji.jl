@@ -39,67 +39,6 @@ function AhoCorasickAutomaton{T}(keys::Vector{String}; sort::Bool = true) where 
     return AhoCorasickAutomaton{T}(collect(zip(keys, 1:length(keys))), sort)
 end
 
-function ==(x::AhoCorasickAutomaton, y::AhoCorasickAutomaton)
-    return x.base == y.base && x.from == y.from && x.ikey == y.ikey && x.deep == y.deep && x.back == y.back
-end
-
-function in(key::AbstractString, obj::AhoCorasickAutomaton{T})::Bool where T
-    return get(obj, key, T(0)) > 0
-end
-
-function in(key::DenseVector{UInt8}, obj::AhoCorasickAutomaton{T})::Bool where T
-    return get(obj, key, T(0)) > 0
-end
-
-function get(obj::AhoCorasickAutomaton{T}, key::DenseVector{UInt8}, default::T)::T where T
-    cur::T = 1
-    n::T = length(obj.from)
-    for c in key
-        nxt = obj.base[cur] + c
-        if (nxt <= n && obj.from[nxt] == cur)
-            cur = nxt
-        else
-            return default
-        end
-    end
-    return obj.ikey[cur]
-end
-
-function get(obj::AhoCorasickAutomaton{T}, key::AbstractString, default::T)::T where T
-    return get(obj, codeunits(key), default)
-end
-
-function length(obj::AhoCorasickAutomaton{T}) where T
-    return count(!iszero, obj.ikey)
-end
-
-function collect(obj::AhoCorasickAutomaton{T}) where T
-    base = obj.base
-    from = obj.from
-    ikey = obj.ikey
-    res = Pair{String, Int}[]
-    for i = 1:length(ikey)
-        if ikey[i] == 0 continue end
-        codes = UInt8[]
-        j = i
-        while j > 1
-            c = j - base[from[j]]
-            push!(codes, c)
-            j = from[j]
-        end
-        push!(res, String(reverse!(codes)) => ikey[i])
-    end
-    return res
-end
-
-function keys(obj::AhoCorasickAutomaton{T}) where T
-    return map(first, collect(obj))
-end
-
-function values(obj::AhoCorasickAutomaton{T}) where T
-    return filter(!iszero, obj.ikey)
-end
-
 function shrink!(obj::AhoCorasickAutomaton{T})::T where T
     actlen = findlast(!iszero, obj.from)
     if (actlen < length(obj.from))
@@ -307,5 +246,75 @@ function eachmatch(obj::AhoCorasickAutomaton{T}, codes::DenseVector{UInt8})::Vec
     return res
 end
 
+#### utils
 import Base.getindex
 getindex(xs::String, match::ACMatch) = xs[match.s:prevind(xs, match.t)]
+
+
+function get(obj::AhoCorasickAutomaton{T}, key::DenseVector{UInt8}, default::T)::T where T
+    cur::T = 1
+    n::T = length(obj.from)
+    for c in key
+        nxt = obj.base[cur] + c
+        if (nxt <= n && obj.from[nxt] == cur)
+            cur = nxt
+        else
+            return default
+        end
+    end
+    return obj.ikey[cur]
+end
+
+function get(obj::AhoCorasickAutomaton{T}, key::AbstractString, default::T)::T where T
+    return get(obj, codeunits(key), default)
+end
+
+getindex(aca::AhoCorasickAutomaton{T}, key::AbstractString) where {T} = get(aca, key, T(0))
+
+
+function in(key::AbstractString, obj::AhoCorasickAutomaton{T})::Bool where T
+    return get(obj, key, T(0)) > 0
+end
+
+function in(key::DenseVector{UInt8}, obj::AhoCorasickAutomaton{T})::Bool where T
+    return get(obj, key, T(0)) > 0
+end
+
+function length(obj::AhoCorasickAutomaton{T}) where T
+    return count(!iszero, obj.ikey)
+end
+
+function collect(obj::AhoCorasickAutomaton{T}) where T
+    base = obj.base
+    from = obj.from
+    ikey = obj.ikey
+    res = Pair{String, Int}[]
+    for i = 1:length(ikey)
+        if ikey[i] == 0 continue end
+        codes = UInt8[]
+        j = i
+        while j > 1
+            c = j - base[from[j]]
+            push!(codes, c)
+            j = from[j]
+        end
+        push!(res, String(reverse!(codes)) => ikey[i])
+    end
+    return res
+end
+
+function keys(obj::AhoCorasickAutomaton{T}) where T
+    return map(first, collect(obj))
+end
+
+function values(obj::AhoCorasickAutomaton{T}) where T
+    return filter(!iszero, obj.ikey)
+end
+
+function ==(x::AhoCorasickAutomaton, y::AhoCorasickAutomaton)
+    return x.base == y.base && x.from == y.from && x.ikey == y.ikey && x.deep == y.deep && x.back == y.back
+end
+
+function show(io::IO, o::AhoCorasickAutomaton{T}) where T
+    print(io, "AhoCorasickAutomaton{$T}", "(keys=", length(o), ")")
+end

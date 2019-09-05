@@ -1,0 +1,85 @@
+﻿     KongYiji(1) HMM Score Table 3007 combined
+  --------------------------------------------------
+  O\S              B       M       E       S
+  B           748676    7394    1148   26808  784026
+  M             6097  123759    4880    2784  137520
+  E             1184   13072  744215   25555  784026
+  S            44352   24760   50066  765101  884279
+              800309  168985  800309  820248 2589851
+  Precision    96.0%   90.6%   95.4%   86.8%
+  Recall       94.0%   77.4%   93.4%   93.5%
+  F1         0.94967 0.82118 0.94387 0.89722
+  ==================================================
+  Char level avg.F1: 0.90298, avg.precison: 92.2%, avg.recall: 89.6%
+  Word level F1: 0.91605, precison: 90.4%, recall: 92.8%
+
+    icwb pku score table 1 combined
+  -------------------------------------
+                         measure  score
+  1             TOTAL_INSERTIONS   4747
+  2              TOTAL_DELETIONS   4747
+  3          TOTAL_SUBSTITUTIONS   7489
+  4                TOTAL_NCHANGE  16983
+  5        TOTAL_TRUE_WORD_COUNT 104372
+  6        TOTAL_TEST_WORD_COUNT 104729
+  7      TOTAL_TRUE_WORDS_RECALL  0.914
+  8   TOTAL_TEST_WORDS_PRECISION  0.911
+  9                    F_MEASURE  0.913
+  10                    OOV_Rate  0.057
+  11             OOV_Recall_Rate  0.885
+  12              IV_Recall_Rate  0.937
+
+==================================
+    icwb msr score table 1 combined
+  -------------------------------------
+                         measure  score
+  1             TOTAL_INSERTIONS   6455
+  2              TOTAL_DELETIONS   6455
+  3          TOTAL_SUBSTITUTIONS   8071
+  4                TOTAL_NCHANGE  20981
+  5        TOTAL_TRUE_WORD_COUNT 106873
+  6        TOTAL_TEST_WORD_COUNT 110323
+  7      TOTAL_TRUE_WORDS_RECALL  0.918
+  8   TOTAL_TEST_WORDS_PRECISION  0.889
+  9                    F_MEASURE  0.903
+  10                    OOV_Rate  0.026
+  11             OOV_Recall_Rate  0.917
+  12              IV_Recall_Rate  0.962
+
+==================================
+┌ Warning: Postag Phang not defined, ignore.
+└ @ KongYiji D:\KongYiji.jl\src\HMM.jl:57
+  icwb cityu score table 1 combined
+  ------------------------------------
+                         measure score
+  1             TOTAL_INSERTIONS  3569
+  2              TOTAL_DELETIONS  3569
+  3          TOTAL_SUBSTITUTIONS  5542
+  4                TOTAL_NCHANGE 12680
+  5        TOTAL_TRUE_WORD_COUNT 40936
+  6        TOTAL_TEST_WORD_COUNT 43453
+  7      TOTAL_TRUE_WORDS_RECALL 0.892
+  8   TOTAL_TEST_WORDS_PRECISION  0.84
+  9                    F_MEASURE 0.865
+  10                    OOV_Rate 0.073
+  11             OOV_Recall_Rate 0.535
+  12              IV_Recall_Rate 0.967
+
+==================================
+    icwb as score table 1 combined
+  -------------------------------------
+                         measure  score
+  1             TOTAL_INSERTIONS   9036
+  2              TOTAL_DELETIONS   9036
+  3          TOTAL_SUBSTITUTIONS  -4891
+  4                TOTAL_NCHANGE  13181
+  5        TOTAL_TRUE_WORD_COUNT 122610
+  6        TOTAL_TEST_WORD_COUNT 127979
+  7      TOTAL_TRUE_WORDS_RECALL  0.917
+  8   TOTAL_TEST_WORDS_PRECISION  0.879
+  9                    F_MEASURE  0.898
+  10                    OOV_Rate  0.043
+  11             OOV_Recall_Rate  0.358
+  12              IV_Recall_Rate  1.078
+
+==================================

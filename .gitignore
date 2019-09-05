@@ -2,7 +2,7 @@
 *.jl.*.cov
 *.jl.mem
 deps/deps.jl
-data/ctb.*
+data/ctb.jld2
 data/hmm.jld2
 data/*.log
 dev/

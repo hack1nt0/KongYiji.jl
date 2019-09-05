@@ -17,6 +17,19 @@ Kong Yiji, a simple fine tuned Chinese tokenizer
 	4. **h2htable** : table of hidden to hidden, i.e., transfer matrix
 	5. **hprtable** : table of prior of hidden, i.e. prior probabilistic
 
+### Version 0.1.1
+
+1. Masked digit chars to reduce parameters overfitting.
+
+2. Removed lower discrimitive probs of word to postag(only keep top 2 highest).
+
+### Version 0.2.0
+
+1. POS tag nerual language model(RNN) to model infinitive history of pos tags.
+
+<!--2. Average Kullback–Leibler divergence instead of negative log likelihood.-->
+
+
 ## Constructor
 ```julia
 kong(; user_dict_path="", user_dict_array=[], user_dict_weight=1)
@@ -37,6 +50,7 @@ See test/runtests.jl
 + Filter low frequency words from CTB
 + Exploit summary of POS table, insert a example column, plus constract with other POS scheme(PKU etc.)
 + Explore MaxEntropy & CRF related algorithms
++ 
 <!--stackedit_data:
 eyJoaXN0b3J5IjpbLTE5OTQwNDMwOTcsLTI1MDAzODUyOSwtMT
 QyMTkzMzg1NywtNDkxMTEzODI0LDk2NDcxOTk0OCw4MTkxNTcz

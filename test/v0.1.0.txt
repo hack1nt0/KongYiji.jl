@@ -1,0 +1,128 @@
+﻿    icwb pku score table 1 combined
+  -------------------------------------
+                         measure  score
+  1             TOTAL_INSERTIONS   5226
+  2              TOTAL_DELETIONS   5226
+  3          TOTAL_SUBSTITUTIONS   8543
+  4                TOTAL_NCHANGE  18995
+  5        TOTAL_TRUE_WORD_COUNT 104372
+  6        TOTAL_TEST_WORD_COUNT 105638
+  7      TOTAL_TRUE_WORDS_RECALL  0.912
+  8   TOTAL_TEST_WORDS_PRECISION  0.901
+  9                    F_MEASURE  0.907
+  10                    OOV_Rate  0.057
+  11             OOV_Recall_Rate  0.833
+  12              IV_Recall_Rate  0.939
+
+==================================
+    icwb msr score table 1 combined
+  -------------------------------------
+                         measure  score
+  1             TOTAL_INSERTIONS   6844
+  2              TOTAL_DELETIONS   6844
+  3          TOTAL_SUBSTITUTIONS   8859
+  4                TOTAL_NCHANGE  22547
+  5        TOTAL_TRUE_WORD_COUNT 106873
+  6        TOTAL_TEST_WORD_COUNT 110888
+  7      TOTAL_TRUE_WORDS_RECALL   0.92
+  8   TOTAL_TEST_WORDS_PRECISION  0.887
+  9                    F_MEASURE  0.903
+  10                    OOV_Rate  0.026
+  11             OOV_Recall_Rate  0.715
+  12              IV_Recall_Rate  0.969
+
+==================================
+┌ Warning: Postag Phang not defined, ignore.
+└ @ KongYiji D:\KongYiji.jl\src\HMM.jl:55
+  icwb cityu score table 1 combined
+  ------------------------------------
+                         measure score
+  1             TOTAL_INSERTIONS  3647
+  2              TOTAL_DELETIONS  3647
+  3          TOTAL_SUBSTITUTIONS  5676
+  4                TOTAL_NCHANGE 12970
+  5        TOTAL_TRUE_WORD_COUNT 40936
+  6        TOTAL_TEST_WORD_COUNT 43737
+  7      TOTAL_TRUE_WORDS_RECALL 0.898
+  8   TOTAL_TEST_WORDS_PRECISION 0.841
+  9                    F_MEASURE 0.869
+  10                    OOV_Rate 0.073
+  11             OOV_Recall_Rate 0.466
+  12              IV_Recall_Rate  0.98
+
+==================================
+    icwb as score table 1 combined
+  -------------------------------------
+                         measure  score
+  1             TOTAL_INSERTIONS   9672
+  2              TOTAL_DELETIONS   9672
+  3          TOTAL_SUBSTITUTIONS  -3703
+  4                TOTAL_NCHANGE  15641
+  5        TOTAL_TRUE_WORD_COUNT 122610
+  6        TOTAL_TEST_WORD_COUNT 129028
+  7      TOTAL_TRUE_WORDS_RECALL  0.919
+  8   TOTAL_TEST_WORDS_PRECISION  0.873
+  9                    F_MEASURE  0.895
+  10                    OOV_Rate  0.043
+  11             OOV_Recall_Rate  0.269
+  12              IV_Recall_Rate  1.085
+
+==================================
+
+
+#Todos 
+## msr
++ V AS 合并还是不合并
++ CD M 合并还是不合并
++ V P 合并还是不合并
++ NT+ 合并还是不合并
++ 营业/性?    合并还是不合并
++ 先生/们?    合并还是不合并
++ 新/世纪?   合并还是不合并
+国家/主席
+5000/多
+多/角度
+武平/县
+村民/们
+连云港/市
+带/出
+盘/根/错/结
+多/年/来
+有权/有/势
+
+个别/人 or 个/别人
+行/方便
+种种/原因
+重重/考验 合并（常用语）还是不合并（语法结构）
+出生/于
+21/世纪
+排/长
+女/兵
+北京/大学 合并（语义单元）还是不合并（语法结构）
+
+## pku
+万/里/故乡/情 语义不明确
+正/是
+除此外
+驻/美/大使馆
+最/大
+总会馆
+几/家/欢乐/几/家/愁
+两手/抓
+什么/时候
+
+## city u
+
+都/會
+機電署
+想/要
+
+## as
+有/著
+台/下
+
+
+
+
+
+

@@ -1,128 +1,143 @@
 
-const Tv = Float64
-const Ti = UInt32
+
 
 mutable struct HMM
     dict::AhoCorasickAutomaton{Ti}
     words::Vector{String}
-    user_words::Int
+    usr_words::Int
     tags::Vector{String}
+    pmp::Dict{String,Int}
     hpr::Vector{Tv}
     h2h::Matrix{Tv}
     h2v::Vector{Dict{Int, Tv}}
     INF::Vector{Tv}
+    usrh2v::Vector{Dict{Int, Tv}}
+    usrINF::Vector{Tv}
+    usrw::Tv
+end
+
+function HMM(;usrw=0.5, EPS=Tv(1e-9), base=nothing)
+        @assert usrw <= 1.
+        @assert base isa HMM || base isa Nothing
+
+        if base == nothing
+                file = KongYiji.dir("hmm.jld2")
+                if !isfile(file) file = decompress(KongYiji.dir("hmm.jld2.7z")) end
+                @assert isfile(file)
+                r = Knet.load(file, "hmm")
+        else
+                r = base
+        end
+
+        r.usrw = usrw
+        usrdict = KongYiji.dir("usrdict.txt")
+        wmp = KongYiji.dict(r.words)
+        for line in eachline(usrdict)
+                 cells = split(line)
+                 pos, word = "", ""
+                 if length(cells) >= 2 pos, word = cells[2], cells[1] end
+                 if length(cells) == 1 word = cells[1] end
+                 if pos != "" && !haskey(r.pmp, pos) @warn ("Postag $(pos) not defined, ignore."); continue end
+                 if word == "" continue end
+                 if pos == "" pos = "NN" end  #NOTE default pos NR
+                 word = mask(word)
+                 if !haskey(wmp, word) wmp[word] = length(wmp) + 1; push!(r.words, word); r.usr_words += 1 end
+                 iw, ip = wmp[word], r.pmp[pos]
+                 r.usrh2v[ip][iw] = get(r.usrh2v[ip], iw, 0) + 1
+        end                        
+        normalize!(r; EPS=EPS)
+        log!.((r.hpr, r.h2h))
+        r.dict = AhoCorasickAutomaton{Ti}(r.words)
+        r
 end
 
 function HMM(corpus)
-        wmp, words, pmp, tags = Dict{String, Int}(), String[], Dict{String, Int}(), String[]
-        for doc in corpus, sent in doc, (pos, word) in sent
-                if !haskey(wmp, word) wmp[word] = length(wmp) + 1; push!(words, word) end
-                if !haskey(pmp, pos) pmp[pos] = length(pmp) + 1; push!(tags, pos) end
-        end
-        np = length(pmp)
-        hpr, h2h, h2v, INF = fill(Tv(0), np), fill(Tv(0), (np, np)), [DefaultDict{Int, Tv}(Tv(0)) for _ in 1:np], fill(Tv(0), np)
+
+        tags, words = KongYiji.postags(corpus), KongYiji.words(corpus)
+        np, pmp = length(tags), KongYiji.dict(tags)
+        
+        hpr, h2h, h2v, INF = fill(Tv(0), np), fill(Tv(0), (np, np)), [Dict{Int, Tv}() for _ in 1:np], fill(Tv(0), np)
+        usrh2v, usrINF, usrw = [Dict{Int, Tv}() for _ in 1:np], fill(Tv(0), np), Tv(0)
         for doc in corpus, sent in doc
                 pp = 0
-                for (pos, word) in sent
-                        iw, ip = wmp[word], pmp[pos]
+                for (ip, iw) in sent
                         if pp == 0 hpr[ip] += 1 else h2h[pp,ip] += 1 end
                         pp = ip
-                        h2v[ip][iw] += 1
+                        h2v[ip][iw] = get(h2v[ip], iw, 0) + 1
                 end
         end
-        dict = AhoCorasickAutomaton{Ti}(words)
-        return HMM(dict, words, 0, tags, hpr, h2h, h2v, INF)
+        dict = AhoCorasickAutomaton{Ti}()
+        HMM(dict, words, 0, tags, pmp, hpr, h2h, h2v, INF, usrh2v, usrINF, usrw)
 end
 
-function Kong(;user_dict_path="", user_dict_array=[], user_dict_weight=1, EPS::Tv=1e-9)
-        file = joinpath(pathof(KongYiji), "..", "..", "data", "hmm.jld2")
-        if !isfile(file) file = unzip7(joinpath(pathof(KongYiji), "..", "..", "data", "hmm.jld2.7z")) end
-        @assert isfile(file)
-        old = load(file)["hmm"]
-        if !isfile(user_dict_path) && length(user_dict_array) == 0
-                normalize!(old; EPS=EPS)
-                return old
-        end
 
-        wmp, pmp = str2int(old.words), str2int(old.tags)
-        max_cnt_h2v = [maximum(values(vs)) for vs in old.h2v]
-        if isfile(user_dict_path)
-               for line in eachline(user_dict_path)
-                        cells = split(line)
-                        pos, word = "", ""
-                        if length(cells) > 0 pos = cells[1] end
-                        if length(cells) > 1 word = cells[2] end
-                        if pos != "" && !haskey(pmp, pos) error("Postag $(pos) not defined") end
-                        if word == "" continue end
-                        if pos == "" pos = "NR" end  #NOTE default pos NR
-                        if !haskey(wmp, word) wmp[word] = length(wmp) + 1; push!(old.words, word); old.user_words += 1 end
-                        iw, ip = wmp[word], pmp[pos]
-                        old.h2v[ip][iw] = user_dict_weight * max_cnt_h2v[ip]
-               end
-        end
-        if length(user_dict_array) > 0
-                pos, word = "", ""
-                for cell in user_dict_array
-                        if cell isa String
-                                word = cell
-                        elseif cell isa Tuple || cell isa Pair
-                                pos, word = cell
-                        else
-                                error("Not supported user_dict_array cell type (String || Pair{String, String} || Tuple{String, String})")
-                        end
-                        if pos == "" pos = "NR" end
-                        if !haskey(pmp, pos) error("Postag $(pos) not defined") end
-                        if !haskey(wmp, word) wmp[word] = length(wmp) + 1; push!(old.words, word); old.user_words += 1 end
-                        iw, ip = wmp[word], pmp[pos]
-                        old.h2v[ip][iw] = user_dict_weight * max_cnt_h2v[ip]
-                end
-        end
-        old.dict = AhoCorasickAutomaton{Ti}(old.words)
-        normalize!(old; EPS=EPS)
-        return old
-end
 
-function normalize!(hmm::HMM; EPS::Tv=1e-9)
+function normalize!(hmm::HMM; EPS=Tv(1e-9))
         xs = hmm.hpr
         xs .+= EPS;
-        xs .= log.(xs ./ sum(xs))
+        xs ./= sum(xs)
         xs = hmm.h2h
         xs .+= EPS;
-        xs .= log.(xs ./ sum(xs; dims=2))
+        xs ./= sum(xs; dims=2)
 
         for (ih, vs) in enumerate(hmm.h2v) 
                 tot = sum(values(vs)) + EPS * (length(vs) + 1)
                 for (k, v) in vs
-                        vs[k] = log((v + EPS) / tot) #todo race condition?
+                        vs[k] = (v + EPS) / tot #todo race condition?
                 end
-                hmm.INF[ih] = log(EPS / tot)
+                hmm.INF[ih] = EPS / tot
         end
+        for (ih, vs) in enumerate(hmm.usrh2v) 
+                tot = sum(values(vs)) + EPS * (length(vs) + 1)
+                for (k, v) in vs
+                        vs[k] = (v + EPS) / tot #todo race condition?
+                end
+                hmm.usrINF[ih] = EPS / tot
+        end
+
+        return hmm
 end
 
-function str2int(xs::Vector{String})
-        r = Dict{String, Int}()
-        for (i, w) in enumerate(xs) r[w] = i end
-        return r
+function log!(hmm::HMM)
+        xs = hmm.hpr
+        xs .= log.(xs)
+        xs = hmm.h2h
+        xs .= log.(xs)
+
+        for (ih, vs) in enumerate(hmm.h2v) 
+                for (k, v) in vs
+                        vs[k] = log(v)
+                end
+        end
+        xs = hmm.INF
+        xs .= log.(xs)
+
+        return hmm
 end
 
-function (hmm::HMM)(xs::Vector{String})
+log!(xs::Vector{Tv}) = xs .= log.(xs)
+log!(xs::Matrix{Tv}) = xs .= log.(xs)
+
+function (hmm::HMM)(xs::Vector{String}; recover=true, withpos=false)
         nc_max = mapreduce(ncodeunits, max, xs)
         np = length(hmm.hpr)
         @assert np > 0
         dp = fill(Tv(-Inf), (nc_max + 1, np))
         pre = fill((1, 0), (nc_max + 1, np))
-        return [hmm(x, dp, pre) for x in xs]
+        return [hmm(x, dp, pre, recover, withpos) for x in xs]
 end
 
-function (hmm::HMM)(x::String)
-        return hmm([x])[1]
+function (hmm::HMM)(x::String; recover=true, withpos=false)
+        return hmm([x]; recover=recover, withpos=withpos)[1]
 end
 
-function (hmm::HMM)(x::String, dp::Matrix{Tv}, pre::Matrix{Tuple{Int, Int}})
+function (hmm::HMM)(x::String, dp::Matrix{Tv}, pre::Matrix{Tuple{Int, Int}}, recover, withpos)::Vector{String}
+        origin = x
+        x = mask(x)
         chrs = codeunits(x) #todo slow?
         vtxs = collect(eachmatch(hmm.dict, chrs))
         sort!(vtxs)
-        nv, nc, np = length(vtxs), length(chrs), length(hmm.hpr)
+        nv, nc, np = length.((vtxs, chrs, hmm.hpr))
         for i = 1:nc + 1, j in 1:np dp[i,j] = -Inf end
         pv = 1
         dp[1, :] = hmm.hpr
@@ -134,7 +149,7 @@ function (hmm::HMM)(x::String, dp::Matrix{Tv}, pre::Matrix{Tuple{Int, Int}})
                 if dp[i, 1] == -Inf
                         #@show i, pre_i
                         for pi = 1:np, pj = 1:np
-                                maybe = dp[pre_i, pj] + hmm.INF[pj] + hmm.h2h[pj,pi]
+                                maybe = dp[pre_i, pj] + hmm.h2h[pj, pi] + logph2v(hmm, pj, 0)
                                 if maybe > dp[i, pi] dp[i, pi] = maybe; pre[i, pi] = (pre_i, pj) end
                         end
                 end
@@ -143,7 +158,7 @@ function (hmm::HMM)(x::String, dp::Matrix{Tv}, pre::Matrix{Tuple{Int, Int}})
                         j = i + length(vtx)
                         for pi = 1:np
                                 for pj = 1:np
-                                        maybe = dp[i, pi] + hmm.h2h[pi,pj] + get(hmm.h2v[pi], vtx.i, hmm.INF[pi])
+                                        maybe = dp[i, pi] + hmm.h2h[pi, pj] + logph2v(hmm, pi, vtx.i)
                                         if maybe > dp[j,pj] dp[j,pj] = maybe; pre[j,pj] = (i, pi) end
                                 end
                         end
@@ -157,30 +172,36 @@ function (hmm::HMM)(x::String, dp::Matrix{Tv}, pre::Matrix{Tuple{Int, Int}})
         @show vtxs
         =###
         v = (nc + 1, argmax(dp[nc + 1,:]))
-        ret = fill("", 0)
+        words = fill("", 0)
         while v[1] != 1
                 pv = pre[v[1],v[2]]
-                push!(ret, x[pv[1]:prevind(x, v[1])])
+                word = x[pv[1]:prevind(x, v[1])]
+                push!(words, word)
                 v = pv
         end
-        reverse!(ret)
+        reverse!(words)
+        if recover; words = demask(words, origin); end
+        ret = words
+
+        if withpos
+                v = (nc + 1, argmax(dp[nc + 1,:]))
+                postags = fill("", 0)
+                while v[1] != 1
+                        pv = pre[v[1],v[2]]
+                        postag = hmm.tags[pv[2]]
+                        push!(postags, postag)
+                        v = pv
+                end
+                reverse!(postags)
+                ret = [join(p, "/") for p in zip(words, postags)]
+        end
+
         return ret
 end
+
+logph2v(hmm::HMM, p, v) = ((1. - hmm.usrw) * get(hmm.h2v[p], v, hmm.INF[p]) + hmm.usrw * get(hmm.usrh2v[p], v, hmm.usrINF[p])) |> log
 
 function ==(a::HMM, b::HMM)
         return all(fname -> getfield(a, fname) == getfield(b, fname), fieldnames(HMM))
 end
 
-#### Interfaces to ChTreebank
-
-function (hmm::HMM)(sent::CtbSentence)
-        return hmm(raw(sent))
-end
-
-function (hmm::HMM)(doc::CtbDocument)
-        return hmm(raw(doc)) #todo split sentences???
-end
-
-function (hmm::HMM)(docs::Vector{CtbDocument})
-        return hmm([raw(doc) for doc in docs])
-end

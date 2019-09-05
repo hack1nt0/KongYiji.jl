@@ -1,5 +1,138 @@
-using Test, KongYiji, Pkg, JLD2, FileIO, ProgressMeter
+using Test, KongYiji, Pkg, JLD2, FileIO, ProgressMeter, DataFrames, Knet
 
+
+#include("ChTreebank.jl")
+include("HMM.jl")
+
+
+
+
+
+
+
+
+
+
+
+
+#=
+@testset "Test hmm-lstm..." begin
+        #KongYiji.trhmmlstm()
+        ctb = ChTreebank()
+        #ctb = [[[("pa", "wa")]]]
+        m = HMM2(ctb; embedsz=64, hiddensz=64, epochs=1, batchsz=256, seqlen=100, file=joinpath(pathof(KongYiji), "..", "..", "data", "hmm2.jld2"))
+        tks = m("一个脱离了低级趣味的人")
+        @show tks
+end
+=#
+
+#=
+@testset "Extract wrong cases on icwb..." begin
+        home = joinpath("d:\\", "icwb2-data")
+        tk = Kong()
+        @showprogress 1 "" for source in ["pku", "msr", "cityu", "as"]
+                test_file = joinpath(home, "testing", "$(source)_test.utf8")
+                truth_file = joinpath(home, "gold", source == "as" ? "as_testing_gold.utf8" : "$(source)_test_gold.utf8")
+                dict_file = joinpath(home, "gold", "$(source)_training_words.utf8")
+                #tk = Kong(; user_dict_path=dict_file)
+                output = tk([line for line in eachline(test_file) if length(line) > 0])
+                truth = [split(line) for line in eachline(truth_file) if length(line) > 0]
+                debug_file = joinpath(pathof(KongYiji), "..", "..", "test", "wrong.cases.$(source).2.txt")
+                open(debug_file, "w") do io
+                        for i in 1:length(truth)
+                                o, s = output[i], truth[i]
+                                ms = eachmatch(o, s)
+                                for i = 1:length(ms) - 1
+                                        lo, ls = ms[i] .+ 1
+                                        ro, rs = ms[i + 1] .- 1
+                                        if lo <= ro
+                                                print(io, "S : "); for j in ls:rs print(io, s[j], '\t') end; println(io)
+                                                print(io, "O : "); for j in lo:ro print(io, o[j], '\t') end; println(io)
+                                                println(io, "-------------------------")
+                                        end
+                                end
+                                println(io, "=================================")
+                        end
+                end
+        end
+end
+=#
+
+#=
+@testset "Do statistics on ctb.." begin
+        @time ctb_home = KongYiji.unzip7(joinpath(pathof(KongYiji), "..", "..", "data", "ctb.jld2.7z"))
+        @time ctb = load(ctb_home)["ctb"]
+        df = DataFrame(cw=String[], cpos=String[], lw=String[], rw=String[], lpos=String[], rpos=String[])
+        for doc in ctb, sent in doc
+                nw = length(sent)
+                for i in 1:nw
+                        cpos, cw = sent[i]
+                        if word == cw | pos == cpos
+                                #l = i == 1  ? "^" : sent[i - 1][2][end:end]
+                                #r = i == nw ? "\$" : sent[i + 1][2][end:end]
+                                lpos, lw = i == 1  ? ("^", "") : sent[i - 1]
+                                rpos, rw = i == nw ? ("\$", "") : sent[i + 1]
+                                push!(df, (cw, cpos, lw, rw, lpos, rpos))
+                        end
+                end
+        end
+        println(size(df))
+end
+=#
+
+#=
+@testset "Testing on icwb..." begin
+        home = joinpath("d:\\", "icwb2-data")
+        @showprogress 1 "" for source in ["pku", "msr", "cityu", "as"]
+                test_file = joinpath(home, "testing", "$(source)_test.utf8")
+                truth_file = joinpath(home, "gold", source == "as" ? "as_testing_gold.utf8" : "$(source)_test_gold.utf8")
+                dict_file = joinpath(home, "gold", "$(source)_training_words.utf8")
+                tk = Kong(; user_dict_path=dict_file)
+                output = tk([line for line in eachline(test_file) if length(line) > 0])
+                truth = [split(line) for line in eachline(truth_file) if length(line) > 0]
+                debug_file = joinpath(pathof(KongYiji), "..", "..", "test", "debug.$(source).txt")
+                open(debug_file, "w") do io
+                       for i in 1:length(truth)
+                               print(io, "S : ")
+                               for w in truth[i] print(io, w, "\t") end
+                               println(io)
+                               print(io, "O : ")
+                               for w in output[i] print(io, w, "\t") end
+                               println(io)
+                               println(io)
+                       end
+                end
+                #=
+                dict = Set([word for word in eachline(dict_file) if length(word) > 0])
+                println(KongYiji.IcwbScoreTable(dict, truth, output, source))
+                println("==================================")
+                =#
+        end
+end
+=#
+
+#=
+@testset "Testing on icwb..." begin
+        home = joinpath("d:\\", "icwb2-data")
+        scorer = joinpath(home, "scripts", "score.pl")
+        tk = Kong()
+        for source in ["as"] #["pku", "msr", "cityu", "as"]
+                test = joinpath(home, "testing", "$(source)_test.utf8")
+                test_out = joinpath(pathof(KongYiji), "..", "..", "test", "$(source)_kongyiji_tokens.txt")
+                open(test_out, "w") do io
+                        for line in tk(collect(eachline(test)))
+                                for token in line print(io, token, ' ') end
+                                println(io)
+                        end
+                end
+                dict = joinpath(home, "gold", "$(source)_training_words.utf8")
+                truth = joinpath(home, "gold", source == "as" ? "as_testing_gold.utf8" : "$(source)_test_gold.utf8")
+                cmd = "perl -w $(scorer) $(dict) $(truth) $(test_out)"
+                run(pipeline(ifelse(Sys.iswindows(), `cmd /c $cmd`, `sh -c $cmd`); 
+                                stdout=joinpath(pathof(KongYiji), "..", "..", "test", "$(source)_kongyiji_score.txt")))
+        end
+end
+=#
 
 #=
 @testset "Generating REQUIRE file..." begin
@@ -29,49 +162,6 @@ end
 =#
 
 #=
-@testset "Generating CTB data file..." begin
-        home = joinpath("d:\\", "ctb8.0")
-        @time ctb = KongYiji.ChTreebank(home; nf=0)
-        ctb_path = joinpath(pathof(KongYiji), "..", "..", "data")
-        ctb_name = joinpath(ctb_path, "ctb.jld2")
-        mkpath(ctb_path)
-        @time @save ctb_name ctb
-        @time zipped_name = KongYiji.zip7(ctb_name)
-        rm(ctb_name)
-        @time unzipped_name = KongYiji.unzip7(zipped_name)
-        @time ctb2 = load(unzipped_name)["ctb"]
-        @time @test ctb == ctb2
-end
-=#
-
-@testset "Test CTB postable..." begin
-        println(postable())
-end
-
-#=
-@testset "Cross validating HMM on CTB..." begin
-        @time unzipped_file = KongYiji.unzip7(joinpath(pathof(KongYiji), "..", "..", "data", "ctb.jld2.7z"))
-        @time ctb = load(unzipped_file)["ctb"]
-        @show length(ctb)
-        folds = KongYiji.kfolds(ctb; k=10)
-        k = length(folds)
-        tbs = Vector{KongYiji.HmmScoreTable}(undef, k)
-        @showprogress 1 "Cross Validating HMM..." for i in 1:k
-                test = folds[i]
-                train = collect(Iterators.flatten([folds[j] for j in 1:k if j != i]))
-                hmm = KongYiji.HMM(train)
-                KongYiji.normalize!(hmm) # Don't forget
-                x = test
-                y = hmm(x)
-                tbs[i] = KongYiji.HmmScoreTable(x, y)
-        #        println(tbs[i])
-        end
-        hmmscoretable = sum(tbs)
-        println(hmmscoretable)
-end
-=#
-
-#=
 @testset "Generating HMM model file of CTB..." begin
         @time ctb_home = KongYiji.unzip7(joinpath(pathof(KongYiji), "..", "..", "data", "ctb.jld2.7z"))
         @time ctb = load(ctb_home)["ctb"]
@@ -88,6 +178,7 @@ end
 end
 =#
 
+#=
 @testset "Test KongYiji(1) with Hand written examples..." begin
         tk = Kong()
         input = "一个脱离了低级趣味的人"
@@ -127,3 +218,5 @@ end
                 println(tk2(filter(c -> c != '/', input)))
         end
 end
+
+=#

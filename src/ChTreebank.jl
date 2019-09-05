@@ -1,7 +1,7 @@
 ﻿
 struct CtbSentence
-        tree::Vector{Char}
-        postags::Vector{Pair{String, String}}
+        tree::String
+        poswords::Vector{Tuple{Ti, Ti}}
 end
 
 struct CtbDocument
@@ -9,21 +9,32 @@ struct CtbDocument
         sents::Vector{CtbSentence}
 end
 
-struct CtbTag
-        name::String
-        description::String
-        example::Vector{String}
+struct ChTreebank
+        postags::Vector{String}
+        inntags::Vector{String}
+        words::Vector{String}
+        docs::Vector{CtbDocument}
 end
 
-"Chinese Treebank 8.0 of 3,007 docs, 71,369 sentences, 1,620,561 words and 2,589,848 characters (hanzi or foreign)"
-struct ChTreebank
-        docs::Vector{CtbDocument}
+postags(ctb::ChTreebank) = ctb.postags
+inntags(ctb::ChTreebank) = ctb.inntags
+words(ctb::ChTreebank) = ctb.words
+
+import Base.show
+function show(io::IO, ctb::ChTreebank)
+        nd = length(ctb)
+        ns = mapreduce(length, +, ctb)
+        nw = mapreduce(length, +, Iterators.flatten(ctb))
+        print(io, "Chinese Treebank of $(nd) docs, $(ns) sents, $(length(ctb.words))/$(nw) words")
 end
 
 function ChTreebank(home::String; nf=0)
         home_data = joinpath(home, "data", "bracketed")
         if (nf <= 0) nf = length(readdir(home_data)) end
         docs = Vector{CtbDocument}(undef, nf)
+        postagMap = Dict{String, Ti}()
+        inntagMap = Dict{String, Ti}()
+        wordMap = Dict{String, Ti}()
         @showprogress 1 "Parsing ChTreebank..." for (i, file_name) in enumerate(readdir(home_data))
                 if i > nf break end
                 type = ""
@@ -36,29 +47,69 @@ function ChTreebank(home::String; nf=0)
                 elseif 5000<=id<=5558 type = "Discussion forums"
                 else type = "N/A"
                 end
-                trees = parsectbfile(joinpath(home_data, file_name))
-                sents = [CtbSentence(tree, postags(CtbTree(tree))) for tree in trees]
+                treestrs = parsectbfile(joinpath(home_data, file_name))
+                sents = CtbSentence[]
+                for treestr in treestrs
+                        tree = CtbTree(treestr)
+                        pws = poswords(tree)
+                        pws = map(p -> (getid!(postagMap, p[1]), getid!(wordMap, p[2])), pws)
+                        push!(sents, CtbSentence(String(treestr), pws))
+                        
+                        for inntag in inntags(tree) getid!(inntagMap, inntag) end
+                end
                 docs[i] = CtbDocument(type, sents)
         end
-        return ChTreebank(docs)
+        postags, _inntags, words = vec.((postagMap, inntagMap, wordMap))
+        r = ChTreebank(postags, _inntags, words, docs)
+        return r
 end
 
-Base.length(sent::CtbSentence) = length(sent.postags)
+function getid!(d::Dict{String,Ti}, k::String)
+        if haskey(d, k) 
+                return d[k]
+        else
+                v = length(d) + 1
+                d[k] = v
+                return v
+        end
+end
+
+function vec(d::Dict{String, Ti})
+        r = Array{String}(undef, length(d))
+        for (k, v) in d r[v] = k end
+        return r
+end
+
+# Assume the unique of elements of v
+function dict(v::Vector{String})
+        r = Dict{String, Ti}()
+        for (i, k) in enumerate(v) r[k] = i end
+        return r
+end
+
+function ChTreebank()
+        file = KongYiji.dir("ctb.jld2")
+        zfile = KongYiji.dir("ctb.jld2.7z")
+        if isfile(file)
+                r = Knet.load(file, "ctb")
+        elseif isfile(zfile)
+                r = Knet.load(KongYiji.decompress(zfile))
+        else
+                error("CTB not downloaded.")
+        end
+        return r
+end
+        
+
+Base.length(sent::CtbSentence) = length(sent.poswords)
 Base.length(doc::CtbDocument) = length(doc.sents)
 Base.length(ctb::ChTreebank) = length(ctb.docs)
-Base.getindex(sent::CtbSentence, inds...) = getindex(sent.postags, inds...)
+Base.getindex(sent::CtbSentence, inds...) = getindex(sent.poswords, inds...)
 Base.getindex(doc::CtbDocument, inds...) = getindex(doc.sents, inds...)
 Base.getindex(ctb::ChTreebank, inds...) = getindex(ctb.docs, inds...)
-Base.iterate(sent::CtbSentence, state=1) = state > length(sent) ? nothing : (sent.postags[state], state + 1)
+Base.iterate(sent::CtbSentence, state=1) = state > length(sent) ? nothing : (sent.poswords[state], state + 1)
 Base.iterate(doc::CtbDocument, state=1) = state > length(doc) ? nothing : (doc.sents[state], state + 1)
 Base.iterate(ctb::ChTreebank, state=1) = state > length(ctb) ? nothing : (ctb.docs[state], state + 1)
-
-function Base.summary(ctb::ChTreebank)
-        ndoc = length(ctb.docs)
-        nsent = sum(map(doc -> length(doc.trees), ctb.docs))
-        nword = sum(map(doc -> sum(map(length, doc.postags)), ctb.docs))
-        return "CTB($(ndoc) D. $(nsent) S. $(nword) W.)"
-end
 
 mutable struct Block
     chrs::Vector{Char}
@@ -116,28 +167,31 @@ end
 text(tree::CtbTree) = tree.label
 ispostag(tree::CtbTree) = length(tree.adj) == 1 && isleaf(tree.adj[1])
 
-function postags(sent::CtbTree)
-        ret = Pair{String, String}[]
-        visitor(tree::CtbTree) = if ispostag(tree) && text(tree) != "-NONE-" push!(ret, text(tree)=>text(tree.adj[1])) end
+function poswords(sent::CtbTree)
+        ret = Tuple{String, String}[]
+        visitor(tree::CtbTree) = if ispostag(tree) && text(tree) != "-NONE-" push!(ret, (text(tree), text(tree.adj[1]))) end
         dfstraverse(sent, visitor)
         return ret
 end
 
-postags(doc::CtbDocument) = Iterators.flatten(doc)
+sents(ctb::ChTreebank) = Iterators.flatten(ctb)
 
-function tokens(sent::CtbTree)
+function inntags(sent::CtbTree)
         ret = String[]
-        visitor(tree::CtbTree) = if ispostag(tree) && text(tree) != "-NONE-" push!(ret, text(tree.adj[1])) end
+        visitor(tree::CtbTree) = if !ispostag(tree) && !isleaf(tree); push!(ret, text(tree)); end
         dfstraverse(sent, visitor)
         return ret
 end
 
-tokens(sent::CtbSentence) = map(last, sent)
-tokens(doc::CtbDocument) = mapreduce(tokens, append!, doc)
+function rawsents(ctb::ChTreebank)
+        r = [join([ctb.words[p[2]] for p in sent]) for sent in sents(ctb)]
+        r
+end
 
-raw(sent::CtbSentence) = mapreduce(last, *, sent) #todo speed up
-raw(doc::CtbDocument) = mapreduce(raw, *, doc)
-
+function wordsents(ctb::ChTreebank)
+        r = [[ctb.words[p[2]] for p in sent] for sent in sents(ctb)]
+        r
+end
 
 function ==(a::ChTreebank, b::ChTreebank)
         return all(fname -> getfield(a, fname) == getfield(b, fname), fieldnames(ChTreebank))
@@ -164,24 +218,47 @@ function split(ctb::ChTreebank; percents::Vector{Float64}=[0.7, 0.2, 0.1])
 end
 
 import Base.+
-function kfolds(docs; k::Int=10)
+function foldbatch(ctb::ChTreebank, nbatch::Int)
         groups = DefaultDict{String, Vector{CtbDocument}}(()->CtbDocument[])
-        for doc in docs push!(groups[doc.type], doc) end
-        k = min(k, mapreduce(length, max, values(groups)))
-        @assert 2 <= k
-        r = [CtbDocument[] for _ in 1:k]
-        for (ig, group) in enumerate(values(groups))
-                ng = length(group)
-                kg = min(ng, k)
-                idx = randperm(ng)
-                from = 1
-                for i in 1:k
-                        sz = div(ng, kg) + (i <= ng % kg ? 1 : 0)
-                        to = from + sz - 1
-                        append!(r[i], group[idx[from:to]])
-                        from = to + 1
+        for doc in ctb; push!(groups[doc.type], doc); end
+        for (_, docs) in groups; shuffle!(docs); end
+        nb = min(nbatch, mapreduce(length, max, values(groups)))
+        @assert 2 <= nb
+        (begin
+                tedocs = CtbDocument[]
+                trdocs = CtbDocument[]
+                for (type, docs) in groups
+                        nd = length(docs)
+                        npick = div(nd + nb - 1, nb)
+                        from = min(nd + 1, (ib - 1) * npick + 1)
+                        to = min(nd, from + npick - 1)
+                        append!(tedocs, docs[from:to])
+
+                        append!(trdocs, docs[1:from - 1])
+                        append!(trdocs, docs[to + 1:nd])
                 end
-                @assert from == ng + 1
+                te = ChTreebank(ctb.postags, ctb.inntags, ctb.words, tedocs)
+                tr = ChTreebank(ctb.postags, ctb.inntags, ctb.words, trdocs)
+                (tr, te)
+        end for ib in 1:nb)
+end
+
+function kwictable(;word="", pos="")
+        ctb_home = KongYiji.unzip7(joinpath(pathof(KongYiji), "..", "..", "data", "ctb.jld2.7z"))
+        ctb = load(ctb_home)["ctb"]
+        df = DataFrame(cw=String[], cpos=String[], lw=String[], rw=String[], lpos=String[], rpos=String[])
+        for doc in ctb, sent in doc
+                nw = length(sent)
+                for i in 1:nw
+                        cpos, cw = sent[i]
+                        if word == cw || pos == cpos
+                                #l = i == 1  ? "^" : sent[i - 1][2][end:end]
+                                #r = i == nw ? "\$" : sent[i + 1][2][end:end]
+                                lpos, lw = i == 1  ? ("^", "") : sent[i - 1]
+                                rpos, rw = i == nw ? ("\$", "") : sent[i + 1]
+                                push!(df, (cw, cpos, lw, rw, lpos, rpos))
+                        end
+                end
         end
-        return r
+        return df
 end
