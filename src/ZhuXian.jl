@@ -37,7 +37,7 @@ function ZhuXian()
         if isfile(file)
                 r = Knet.load(file, "zx")
         elseif isfile(zfile)
-                r = Knet.load(KongYiji.decompress(zfile))
+                r = Knet.load(KongYiji.decompress(zfile), "zx")
         else
                 error("zhuxian not downloaded.")
         end
