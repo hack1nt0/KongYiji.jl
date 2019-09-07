@@ -7,15 +7,21 @@ using JLD2, FileIO
 using Random, DataStructures, ProgressMeter, DelimitedFiles, DataFrames
 
 export postable, h2vtable, v2htable, h2htable, hprtable, kwictable,
-        ChTreebank, CtbDocument, CtbSentence, train!, HMM2
+        ChTreebank, train!, HMM, ooHMM, LM, ZhuXian, posidsents, wordsents, rawsents,
+        UselessTable, generate!
 
 
 const Ti = UInt32
 const Tv = Float32
+const oo = Tv(Inf)
+
+include("utils.jl")
 
 include("CtbTree.jl")
 include("ChTreebank.jl")
-include("utils.jl")
+
+include("ZhuXian.jl")
+
 include("UselessTable.jl")
 include("compress.jl")
 include("AhoCorasickAutomaton.jl")
@@ -23,7 +29,7 @@ include("HMM.jl")
 include("HmmScoreTable.jl")
 include("HmmDebug.jl")
 include("IcwbScoreTable.jl")
-include("PosLM.jl")
+include("LM.jl")
 include("ooHMM.jl")
 
 end # module

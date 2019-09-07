@@ -58,7 +58,7 @@ function HMM(corpus)
         
         hpr, h2h, h2v, INF = fill(Tv(0), np), fill(Tv(0), (np, np)), [Dict{Int, Tv}() for _ in 1:np], fill(Tv(0), np)
         usrh2v, usrINF, usrw = [Dict{Int, Tv}() for _ in 1:np], fill(Tv(0), np), Tv(0)
-        for doc in corpus, sent in doc
+        for sent in sents(corpus)
                 pp = 0
                 for (ip, iw) in sent
                         if pp == 0 hpr[ip] += 1 else h2h[pp,ip] += 1 end
@@ -70,6 +70,30 @@ function HMM(corpus)
         HMM(dict, words, 0, tags, pmp, hpr, h2h, h2v, INF, usrh2v, usrINF, usrw)
 end
 
+function train!(hmm::HMM, corpus)
+        tags, words = KongYiji.postags(corpus), KongYiji.words(corpus)
+        @assert length(setdiff(tags, hmm.tags)) == 0
+        pmp = KongYiji.dict(tags)
+        wmp = dict(hmm.words)
+        nw = length(wmp)
+
+        for sent in sents(corpus)
+                pp = 0
+                for (ip, iw) in sent
+                        ip = pmp[tags[ip]]
+                        if pp == 0 hmm.hpr[ip] += 1 else hmm.h2h[pp,ip] += 1 end
+                        pp = ip
+
+                        iw = getid!(wmp, words[iw])
+                        hmm.h2v[ip][iw] = get(hmm.h2v[ip], iw, 0) + 1
+                end
+        end
+        if nw < length(wmp)
+                hmm.words = vec(wmp)
+                hmm.dict = AhoCorasickAutomaton{Ti}(wmp)
+        end
+        hmm
+end
 
 
 function normalize!(hmm::HMM; EPS=Tv(1e-9))

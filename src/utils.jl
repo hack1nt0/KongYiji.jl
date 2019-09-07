@@ -27,26 +27,6 @@ end
 # normalize width chars & numeric chars & spaces
 mask(x::AbstractString) = filter(!isspace, map(normalize_width_numeric, x))
 
-function mask(ctb::ChTreebank)
-        words = mask.(ctb.words) |> sort! |> unique!
-        wmp = dict(words)
-        nd = length(ctb)
-        r = ChTreebank(ctb.postags, ctb.inntags, words, Vector{CtbDocument}(undef, nd))
-        for id = 1:nd
-                doc1 = ctb.docs[id]
-                ns = length(doc1)
-                doc2 = CtbDocument(doc1.type, Vector{CtbSentence}(undef, ns))
-                for is = 1:ns
-                        s1 = doc1[is]
-                        s2 = map(p->(p[1], wmp[ctb.words[p[2]] |> mask]), s1)
-                        s2 = CtbSentence(s1.tree, s2)
-                        doc2.sents[is] = s2
-                end
-                r.docs[id] = doc2
-        end
-        r
-end
-
 # inverse function of mask
 function demask(y::Vector{String}, x::String)
         xchrs = collect(x)
@@ -147,3 +127,27 @@ simplify(s::String) = String(simplify.(collect(s)))
 
 
 dir(o...) = joinpath(pathof(KongYiji), "..", "..", "data", o...)
+
+
+function getid!(d::Dict{String,Ti}, k::String)
+        if haskey(d, k) 
+                return d[k]
+        else
+                v = length(d) + 1
+                d[k] = v
+                return v
+        end
+end
+
+function vec(d::Dict{String, Ti})
+        r = Array{String}(undef, length(d))
+        for (k, v) in d r[v] = k end
+        return r
+end
+
+# Assume the unique of elements of v
+function dict(v::Vector{String})
+        r = Dict{String, Ti}()
+        for (i, k) in enumerate(v) r[k] = i end
+        return r
+end

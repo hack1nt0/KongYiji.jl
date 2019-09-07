@@ -2,7 +2,12 @@ using Test, KongYiji, Pkg, JLD2, FileIO, ProgressMeter, DataFrames, Knet
 
 
 #include("ChTreebank.jl")
-include("HMM.jl")
+#include("HMM.jl")
+#include("ZhuXian.jl")
+include("LM.jl")
+#include("ooHMM.jl")
+#include("LMHMM.jl")
+
 
 
 
