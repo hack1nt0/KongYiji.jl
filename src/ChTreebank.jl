@@ -68,9 +68,9 @@ function ChTreebank()
         file = KongYiji.dir("ctb.jld2")
         zfile = KongYiji.dir("ctb.jld2.7z")
         if isfile(file)
-                r = Knet.load(file, "ctb")
+                r = load(file)["ctb"]
         elseif isfile(zfile)
-                r = Knet.load(KongYiji.decompress(zfile))
+                r = load(KongYiji.decompress(zfile))["ctb"]
         else
                 error("CTB not downloaded.")
         end

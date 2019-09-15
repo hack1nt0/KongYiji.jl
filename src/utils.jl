@@ -139,6 +139,7 @@ function getid!(d::Dict{String,Ti}, k::String)
         end
 end
 
+import Base.vec
 function vec(d::Dict{String, Ti})
         r = Array{String}(undef, length(d))
         for (k, v) in d r[v] = k end

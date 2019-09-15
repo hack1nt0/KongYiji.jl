@@ -47,12 +47,15 @@ end
 function train!(m::LM, seq::Vector{<:Integer}, epochs, batchsz, seqlen)
         data = prepare(seq, batchsz, seqlen)
         losses = [begin
-                        reset!(m, (0,0))
+                        @show "GC"
+                        m.rnn.h = 0
+                        m.rnn.c = 0
+                        Knet.gc()
                         loss
                   end
                   for loss in every(progress(adam(m, ncycle(data, epochs))), length(data))
         ]
-        Knet.gc()
+        #Knet.gc()
         return losses
 end
 
@@ -65,21 +68,18 @@ function reset!(m::LM, hc)
         m.rnn.c = hc[2]
 end
 
-function LM(corpus; o...)
+function LM(corpus; epochs=100, batchsz=256, seqlen=100, o...)
         seqs = posidsents(corpus)
         np = length(postags(corpus))
-        embedsz::Int = np
+        embedsz::Int = np * 2
         vocabsz::Int = np
         hiddensz::Int = np #todo
         outputsz::Int = np
-        epochs::Int = 100
-        batchsz::Int = 256
-        seqlen::Int = 100
 
         nn = LM(embedsz, vocabsz, hiddensz, outputsz; o...)
         seq = collect(Iterators.flatten(seqs))
         train!(nn, seq, epochs, batchsz, seqlen)
-        #nn = nn |> cpucopy
+        nn = nn |> cpucopy
         reset!(nn, (0, 0))
         return nn
 end
