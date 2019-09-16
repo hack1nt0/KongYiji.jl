@@ -1,18 +1,15 @@
-using Test, KongYiji, Pkg, JLD2, FileIO, ProgressMeter, DataFrames, Knet
+using Test, KongYiji, Pkg, JLD2, FileIO, ProgressMeter, DataFrames
+
+include("icwb.jl")
 
 
 #include("ChTreebank.jl")
-#include("HMM.jl")
+include("HMM.jl")
 #include("ZhuXian.jl")
-include("LM.jl")
+#include("LM.jl")
 #include("ooHMM.jl")
 #include("LMHMM.jl")
-
-
-
-
-
-
+#include("NGramHMM.jl")
 
 
 

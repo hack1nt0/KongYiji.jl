@@ -1,0 +1,103 @@
+﻿
+1) ChTreebank
+    
+    KongYiji(1) HMM Score Table 71373 combined
+  ------------------------------------------------
+  O\S              B      M       E      S
+  B           766764   3517    3194  32082  805557
+  M             7213 154834    6426   2984  171457
+  E             1953   8874  762194  32536  805557
+  S            24379   1760   28495 752646  807280
+              800309 168985  800309 820248 2589851
+  Precision    94.9%  92.2%   94.3%  94.3%
+  Recall       95.6%  93.2%   95.1%  92.8%
+  F1         0.94829 0.8882 0.94316 0.9267
+  ================================================
+  Char level avg.F1: 0.92659, avg.precison: 93.9%, avg.recall: 94.2%
+  Word level F1: 0.93278, precison: 93.5%, recall: 93.1%
+
+2) ZhuXian
+
+      KongYiji(1) HMM Score Table 1394 combined
+  ------------------------------------------------
+  O\S              B       M       E       S
+  B            10892      39      37     462 11430
+  M               22    1468      22      15  1527
+  E              125      51   10880     374 11430
+  S             1001     122    1101   21464 23688
+               12040    1680   12040   22315 48075
+  Precision    96.0%   98.1%   95.9%   92.7%
+  Recall       92.3%   93.6%   92.2%   96.8%
+  F1         0.93793 0.93268 0.93667 0.94403
+  ================================================
+  Char level avg.F1: 0.93783, avg.precison: 95.7%, avg.recall: 93.7%
+  Word level F1: 0.9432, precison: 93.6%, recall: 95.1%
+
+     icwb pku score table 1 combined
+  -------------------------------------
+                         measure  score
+  1             TOTAL_INSERTIONS   6648
+  2              TOTAL_DELETIONS   6648
+  3          TOTAL_SUBSTITUTIONS  11524
+  4                TOTAL_NCHANGE  24820
+  5        TOTAL_TRUE_WORD_COUNT 104372
+  6        TOTAL_TEST_WORD_COUNT 108198
+  7      TOTAL_TRUE_WORDS_RECALL  0.899
+  8   TOTAL_TEST_WORDS_PRECISION  0.867
+  9                    F_MEASURE  0.883
+  10                    OOV_Rate  0.057
+  11             OOV_Recall_Rate  0.898
+  12              IV_Recall_Rate  0.922
+
+==================================
+    icwb msr score table 1 combined
+  -------------------------------------
+                         measure  score
+  1             TOTAL_INSERTIONS  11664
+  2              TOTAL_DELETIONS  11664
+  3          TOTAL_SUBSTITUTIONS  19415
+  4                TOTAL_NCHANGE  42743
+  5        TOTAL_TRUE_WORD_COUNT 106873
+  6        TOTAL_TEST_WORD_COUNT 116104
+  7      TOTAL_TRUE_WORDS_RECALL  0.874
+  8   TOTAL_TEST_WORDS_PRECISION  0.805
+  9                    F_MEASURE  0.838
+  10                    OOV_Rate  0.026
+  11             OOV_Recall_Rate  0.857
+  12              IV_Recall_Rate  0.923
+
+==================================
+  icwb cityu score table 1 combined
+  ------------------------------------
+                         measure score
+  1             TOTAL_INSERTIONS 11380
+  2              TOTAL_DELETIONS 11380
+  3          TOTAL_SUBSTITUTIONS 23032
+  4                TOTAL_NCHANGE 45792
+  5        TOTAL_TRUE_WORD_COUNT 40936
+  6        TOTAL_TEST_WORD_COUNT 51231
+  7      TOTAL_TRUE_WORDS_RECALL 0.625
+  8   TOTAL_TEST_WORDS_PRECISION   0.5
+  9                    F_MEASURE 0.555
+  10                    OOV_Rate 0.073
+  11             OOV_Recall_Rate 0.841
+  12              IV_Recall_Rate 0.675
+
+==================================
+    icwb as score table 1 combined
+  -------------------------------------
+                         measure  score
+  1             TOTAL_INSERTIONS  32847
+  2              TOTAL_DELETIONS  32847
+  3          TOTAL_SUBSTITUTIONS  53271
+  4                TOTAL_NCHANGE 118965
+  5        TOTAL_TRUE_WORD_COUNT 122610
+  6        TOTAL_TEST_WORD_COUNT 151714
+  7      TOTAL_TRUE_WORDS_RECALL  0.663
+  8   TOTAL_TEST_WORDS_PRECISION  0.535
+  9                    F_MEASURE  0.592
+  10                    OOV_Rate  0.043
+  11             OOV_Recall_Rate  0.989
+  12              IV_Recall_Rate  0.836
+
+==================================

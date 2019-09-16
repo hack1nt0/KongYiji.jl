@@ -64,4 +64,12 @@ end
 
 log!(hpr::Vector{Tv}) = hpr .= log.(hpr)
 log!(h2h::Matrix{Tv}) = h2h .= log.(h2h)
+function log!(h2v::Vector{Dict{Int,Tv}})
+        for (ih, vs) in enumerate(h2v) 
+                for (k, v) in vs
+                        vs[k] = log(v)
+                end
+        end
+        h2v
+end
 
