@@ -1,21 +1,22 @@
 ﻿
+
 #=
 @testset "Generating base HMM model..." begin
-        ctb = ChTreebank()
-        hmm = KongYiji.HMM(ctb)
+        d = ChTreebank()
+	m = KongYiji.HMM(d, KongYiji.dir("usrdict"), 1.)
         file = KongYiji.dir("hmm.jld2")
-        Knet.save(file, "hmm", hmm)
-        zfile = KongYiji.compress(file)
+        save(file, "m", m)
+        @time m2 = KongYiji.HMM()
+        @assert m == m2
 
-        @time hmm = KongYiji.HMM()
-        x = KongYiji.rawsents(ctb)
-        z = KongYiji.wordsents(ctb)
-        y = hmm(x)                 
+        x = KongYiji.rawsents(d)
+        z = KongYiji.wordsents(d)
+        y = m(x)                 
         tb = KongYiji.HmmScoreTable(z, y)
         println(tb)
         
-        rm(file)
 end
+
 
 @testset "Cross validating HMM on CTB..." begin
         @time ctb = ChTreebank()
@@ -61,7 +62,7 @@ end
         println(hmmscoretable)
 end
 
-@testset "Generating HMM on ZhuXian..." begin
+@testset "Generating HMM ..." begin
         @time d = ChTreebank()
         m = HMM(d, 1., KongYiji.dir("usrdict"))
         save(KongYiji.dir("hmm.jld2"), "m", m)
@@ -73,11 +74,74 @@ end
         tb = KongYiji.HmmScoreTable(z, y)
         println(tb)
 end
-  =#
 
 @testset "Testing HMM on icwb..." begin
         m = HMM()
         testonicwb(m)
 end
+
+@testset "Testing HMM Tagger..." begin
+	#x = split("我  扔  了  两颗  手榴弹  ，  他  一下子  出  溜  下去  。")
+        x = "唐山东日新能源材料有限公司"
+	m = HMM()
+	println(m(x; withpos=true))
+end
+
+@testset "Names..." begin
+        m = HMM()
+        is = joinpath("D:\\", "project-names.csv")
+        os = joinpath("D:\\", "project-names-segmented.csv")
+        xs = [x for x in eachline(is)]
+        ys = m(xs; withpos=true)
+        open(os, "w") do io
+        	for y in ys
+        		for w in y; print(io, w, ' '); end
+        		println(io)
+		end
+	end
+end
+
+=#
+
+@testset "Generating trimmed..." begin
+        d = ChTreebank()
+        m = KongYiji.HMM(d, KongYiji.dir("usrdict"), 1.)
+        np = length(m.tags)
+        for ip = 1:np
+        	tag = m.tags[ip]
+        	open(KongYiji.dir("trimmed", tag), "w") do io
+        		println(io, "missing", ' ', exp(m.INF[ip]))
+   			vs = collect(m.h2v[ip])
+                  	sort!(vs; by=last, rev=true)
+                  	for (v, p) in vs
+                  		v, p = m.words[v], exp(p)
+                  		println(io, v, ' ', p)
+          		end
+		end
+	end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -1,4 +1,5 @@
 using Test, KongYiji, Pkg, JLD2, FileIO, ProgressMeter, DataFrames
+#using Knet
 
 include("icwb.jl")
 
