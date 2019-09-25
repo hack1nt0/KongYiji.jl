@@ -37,9 +37,9 @@ include("HMM.jl")
 include("NGramHMM.jl")
 
 
-include("LM.jl")
-include("Heap.jl")
-include("LMHMM.jl")
+#include("LM.jl")
+#include("Heap.jl")
+#include("LMHMM.jl")
 
 
 end # module

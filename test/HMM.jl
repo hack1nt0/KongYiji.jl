@@ -1,6 +1,6 @@
 ﻿
 
-#=
+
 @testset "Generating base HMM model..." begin
         d = ChTreebank()
 	m = KongYiji.HMM(d, KongYiji.dir("usrdict"), 1.)
@@ -17,7 +17,7 @@
         
 end
 
-
+#=
 @testset "Cross validating HMM on CTB..." begin
         @time ctb = ChTreebank()
         nb = 10
@@ -87,6 +87,7 @@ end
 	println(m(x; withpos=true))
 end
 
+=#
 @testset "Names..." begin
         m = HMM()
         is = joinpath("D:\\", "project-names.csv")
@@ -101,27 +102,10 @@ end
 	end
 end
 
+
+#=
+
 =#
-
-@testset "Generating trimmed..." begin
-        d = ChTreebank()
-        m = KongYiji.HMM(d, KongYiji.dir("usrdict"), 1.)
-        np = length(m.tags)
-        for ip = 1:np
-        	tag = m.tags[ip]
-        	open(KongYiji.dir("trimmed", tag), "w") do io
-        		println(io, "missing", ' ', exp(m.INF[ip]))
-   			vs = collect(m.h2v[ip])
-                  	sort!(vs; by=last, rev=true)
-                  	for (v, p) in vs
-                  		v, p = m.words[v], exp(p)
-                  		println(io, v, ' ', p)
-          		end
-		end
-	end
-end
-
-
 
 
 

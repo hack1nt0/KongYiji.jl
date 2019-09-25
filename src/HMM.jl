@@ -51,7 +51,7 @@ function HMM(corpus, dictpath, major)
 
         wmp = KongYiji.dict(words)
         
-        if ispath(dictpath)
+        if isdir(dictpath)
                 cd(() -> begin
                                 for tag in tags
                                         if !ispath(tag); continue; end
@@ -83,6 +83,7 @@ function HMM(corpus, dictpath, major)
 
         HMM(dict, words, usr_words, tags, hpr, h2h, h2v, INF)
 end
+
 
 HMM() = load(KongYiji.dir("hmm.jld2"))["m"]
 
